@@ -1,0 +1,324 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/manrope/wght.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─────────────────────────────────────────────────────────────
+   FOLIO — Civic Bureau
+
+   A late-modern institutional system: near-white plate, deep indigo
+   ink that is never pure black, hairline structure, and violet as
+   the single acting colour.
+
+   One gradient exists in this entire product — the ribbon, the
+   world's signature material. Nothing else on any surface gets one.
+
+   Light and dark are authored separately. Dark is not the light
+   theme inverted; it is the same bureau after hours, the plate
+   going to deep indigo rather than to black.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --plate: #f7f7fa;
+  --plate-deep: #eeeef4;
+  --surface: #ffffff;
+
+  --ink: #1b1547;
+  --body: #4b5165;
+  --muted: #6b7089;
+
+  --hairline: #e6e7ee;
+  --hairline-strong: #d3d5e2;
+
+  --violet: #6b5ce7;
+  --violet-press: #4a3bc4;
+  --violet-ink: #ffffff;
+  --violet-wash: #efedfd;
+
+  --positive: #17806a;
+  --caution: #b4325c;
+  --caution-wash: #fdeef3;
+
+  --ribbon-1: #7fd8d0;
+  --ribbon-2: #c9b8f0;
+  --ribbon-3: #5b4fd6;
+  --ribbon-opacity: 1;
+
+  --page: #ffffff;
+  --page-line: rgb(27 21 71 / 0.14);
+
+  --shadow-card: 0 1px 2px rgb(27 21 71 / 0.04), 0 12px 32px -14px rgb(27 21 71 / 0.16);
+  --shadow-lift: 0 2px 6px rgb(27 21 71 / 0.06), 0 24px 48px -18px rgb(27 21 71 / 0.24);
+}
+
+.dark {
+  --plate: #0e0b24;
+  --plate-deep: #08061a;
+  --surface: #17123a;
+
+  --ink: #f3f2fc;
+  --body: #c0bddd;
+  --muted: #9995c0;
+
+  --hairline: #2a2458;
+  --hairline-strong: #3a3370;
+
+  --violet: #9284f7;
+  --violet-press: #b0a4ff;
+  --violet-ink: #14103a;
+  --violet-wash: #221c52;
+
+  --positive: #5fd6bb;
+  --caution: #ff8fab;
+  --caution-wash: #3a1730;
+
+  --ribbon-1: #7fd8d0;
+  --ribbon-2: #a08ee8;
+  --ribbon-3: #5b4fd6;
+  --ribbon-opacity: 0.7;
+
+  --page: #f4f3fb;
+  --page-line: rgb(27 21 71 / 0.18);
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.45), 0 14px 34px -16px rgb(0 0 0 / 0.7);
+  --shadow-lift: 0 2px 8px rgb(0 0 0 / 0.55), 0 28px 56px -20px rgb(0 0 0 / 0.8);
+}
+
+@theme inline {
+  --color-plate: var(--plate);
+  --color-plate-deep: var(--plate-deep);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-violet: var(--violet);
+  --color-violet-press: var(--violet-press);
+  --color-violet-ink: var(--violet-ink);
+  --color-violet-wash: var(--violet-wash);
+  --color-positive: var(--positive);
+  --color-caution: var(--caution);
+  --color-caution-wash: var(--caution-wash);
+  --color-page: var(--page);
+
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-part: 10px;
+  --radius-control: 8px;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  * {
+    border-color: var(--hairline);
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--plate);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--violet);
+    color: var(--violet-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--violet);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--plate-deep);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--hairline-strong);
+    border-radius: 99px;
+    border: 3px solid var(--plate-deep);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+  }
+
+  input[type='range'] {
+    accent-color: var(--violet);
+  }
+
+  a[href],
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  label[for],
+  summary {
+    cursor: pointer;
+  }
+}
+
+/* Card controls appear on hover. A device with no hover has no way to reveal
+   them, so there they stay visible — hiding a delete button behind an
+   interaction the hardware cannot perform would remove it entirely. */
+.on-hover {
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-out-quint);
+}
+.group:hover .on-hover,
+.on-hover:focus-within {
+  opacity: 1;
+}
+@media (hover: none) {
+  .on-hover {
+    opacity: 1;
+  }
+}
+
+/* Compact controls stay compact for a mouse but reach the 44px touch
+   minimum on a coarse pointer. Scoped to a class so inline links in
+   prose are never turned into 44px blocks. */
+@media (pointer: coarse) {
+  .tap {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Type
+   ───────────────────────────────────────────────────────────── */
+.display {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.figure {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Surfaces — hairline structure, no glass, no gradient
+   ───────────────────────────────────────────────────────────── */
+.card {
+  background-color: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-part);
+}
+
+.card-quiet {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-part);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Interaction — compositor-only, and nothing changes an element's
+   box, so the page never shifts under the pointer.
+   ───────────────────────────────────────────────────────────── */
+.hoverable {
+  transition:
+    border-color 0.22s var(--ease-out-quint),
+    box-shadow 0.28s var(--ease-out-quint),
+    transform 0.28s var(--ease-out-quint),
+    background-color 0.22s var(--ease-out-quint);
+}
+.hoverable:hover {
+  border-color: var(--violet);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-3px);
+}
+
+/* Underline that draws in from the left. */
+.u-draw {
+  position: relative;
+}
+.u-draw::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.34s var(--ease-out-quint);
+}
+.u-draw:hover::after,
+.u-draw:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.arrow-slide {
+  transition: transform 0.3s var(--ease-out-quint);
+}
+.group:hover .arrow-slide {
+  transform: translateX(5px);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   The ribbon — the world's signature material, and the only
+   gradient permitted anywhere in this product.
+   ───────────────────────────────────────────────────────────── */
+.ribbon {
+  position: absolute;
+  pointer-events: none;
+  opacity: var(--ribbon-opacity);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Entrance
+   ───────────────────────────────────────────────────────────── */
+.reveal {
+  transition:
+    opacity 0.66s var(--ease-out-quint),
+    transform 0.66s var(--ease-out-quint);
+}
+
+.reveal[data-shown='false'] {
+  opacity: 0;
+  transform: translateY(16px);
+  will-change: opacity, transform;
+}
+
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal[data-shown='false'] {
+    opacity: 1;
+    transform: none;
+  }
+}
