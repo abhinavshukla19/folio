@@ -16,7 +16,7 @@ export function SignaturePad({
   const drawing = useRef(false)
   const last = useRef<{ x: number; y: number } | null>(null)
   const [dirty, setDirty] = useState(false)
-  const [colour, setColour] = useState('#12103a')
+  const [colour, setColour] = useState('#0a0a0a')
   const [weight, setWeight] = useState(3)
 
   // Back the canvas at device resolution so the stroke is not soft.
@@ -113,11 +113,11 @@ export function SignaturePad({
   }, [onDone])
 
   return (
-    <div className="fixed inset-0 z-[70] grid place-items-center bg-[rgb(9_9_11/0.55)] p-5">
-      <div className="card w-full max-w-lg overflow-hidden">
-        <div className="border-b border-hairline px-5 py-4">
-          <h2 className="text-[17px] font-bold tracking-[-0.02em]">Draw your signature</h2>
-          <p className="mt-1 text-[13px] text-body">
+    <div className="fixed inset-0 z-[70] grid place-items-center bg-[rgb(6_8_10/0.62)] p-5">
+      <div className="table-plane w-full max-w-lg overflow-hidden">
+        <div className="border-b border-edge px-5 py-4">
+          <h2 className="display text-[18px]">Draw your signature</h2>
+          <p className="mt-1 text-[13.5px] text-ink-quiet">
             Use a mouse, pen or finger. It is cropped to the ink and stays on your device.
           </p>
         </div>
@@ -128,22 +128,22 @@ export function SignaturePad({
           onPointerMove={move}
           onPointerUp={end}
           onPointerLeave={end}
-          className="h-52 w-full touch-none bg-page"
+          className="h-52 w-full touch-none bg-sheet"
           style={{ cursor: 'crosshair' }}
         />
 
-        <div className="flex flex-wrap items-center gap-4 border-t border-hairline px-5 py-3">
-          <label className="flex items-center gap-2 text-[13px] text-body">
+        <div className="flex flex-wrap items-center gap-4 border-t border-edge px-5 py-3">
+          <label className="flex items-center gap-2 text-[13px] text-ink-2">
             Ink
             <input
               type="color"
               value={colour}
               onChange={(e) => setColour(e.target.value)}
-              className="h-7 w-9 cursor-pointer rounded border border-hairline bg-transparent"
+              className="h-7 w-9 cursor-pointer rounded border border-line bg-transparent"
               aria-label="Ink colour"
             />
           </label>
-          <label className="flex items-center gap-2 text-[13px] text-body">
+          <label className="flex items-center gap-2 text-[13px] text-ink-2">
             Weight
             <input
               type="range"
@@ -159,17 +159,17 @@ export function SignaturePad({
           <button
             type="button"
             onClick={clear}
-            className="ml-auto text-[13px] font-semibold text-body transition-colors duration-200 hover:text-caution"
+            className="ml-auto text-[13px] font-semibold text-ink-2 transition-colors duration-200 hover:text-danger"
           >
             Clear
           </button>
         </div>
 
-        <div className="flex justify-end gap-2 border-t border-hairline px-5 py-4">
-          <Button variant="secondary" onClick={onCancel}>
+        <div className="flex justify-end gap-2 border-t border-edge px-5 py-4">
+          <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button onClick={commit} disabled={!dirty}>
+          <Button variant="solid" onClick={commit} disabled={!dirty}>
             Place signature
           </Button>
         </div>

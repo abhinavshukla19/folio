@@ -4,7 +4,7 @@
   var root = document.documentElement
   try {
     var stored = localStorage.getItem('folio-theme')
-    // Whiteprint is the default: this is a daytime desk task.
+    // A stored choice wins; otherwise follow the system preference.
     var dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
     root.classList.toggle('dark', dark)
     root.style.colorScheme = dark ? 'dark' : 'light'

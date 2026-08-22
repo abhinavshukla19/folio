@@ -491,12 +491,12 @@ export function PageEditor({
   /* ── render ──────────────────────────────────────────────── */
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-plate">
-      <div className="flex flex-wrap items-center gap-3 border-b border-hairline px-4 py-3">
+    <div className="fixed inset-0 z-[60] flex flex-col bg-bg">
+      <div className="flex flex-wrap items-center gap-3 border-b border-line px-4 py-3">
         <button
           type="button"
           onClick={onClose}
-          className="tap inline-flex h-10 items-center gap-2 rounded-control border border-hairline px-3.5 text-[13px] font-semibold text-body transition-colors duration-200 hover:border-violet hover:text-violet"
+          className="tap inline-flex h-10 items-center gap-2 rounded-sm border border-line px-3.5 text-[13px] font-semibold text-ink-2 transition-colors duration-200 hover:border-ink hover:text-ink"
         >
           <X size={15} />
           Done
@@ -512,7 +512,7 @@ export function PageEditor({
           </IconBtn>
         </div>
 
-        <div className="flex items-center gap-1 rounded-control border border-hairline px-1">
+        <div className="flex items-center gap-1 rounded-sm border border-line px-1">
           <IconBtn label="Zoom out" onClick={() => setZoom((z) => Math.max(ZOOM_MIN, z / 1.25))}>
             <Minus size={15} />
           </IconBtn>
@@ -520,7 +520,7 @@ export function PageEditor({
             type="button"
             onClick={() => setZoom(1)}
             title="Fit the page (Ctrl+0)"
-            className="min-w-[3.5rem] text-center text-[13px] font-semibold text-body transition-colors duration-200 hover:text-violet"
+            className="tap min-w-[3.5rem] text-center text-[13px] font-semibold text-ink-2 transition-colors duration-200 hover:text-ink"
           >
             {Math.round(zoom * 100)}%
           </button>
@@ -533,19 +533,19 @@ export function PageEditor({
         </div>
 
         <div className="ml-auto flex flex-wrap items-center gap-2">
-          <Button variant="secondary" size="md" onClick={addText}>
+          <Button variant="outline" size="md" onClick={addText}>
             <Type size={15} />
             Text
           </Button>
-          <Button variant="secondary" size="md" onClick={() => void addCover()}>
+          <Button variant="outline" size="md" onClick={() => void addCover()}>
             <Square size={15} />
             Cover
           </Button>
-          <Button variant="secondary" size="md" onClick={() => setSigning(true)}>
+          <Button variant="outline" size="md" onClick={() => setSigning(true)}>
             <PenLine size={15} />
             Signature
           </Button>
-          <Button variant="secondary" size="md" onClick={() => fileInput.current?.click()}>
+          <Button variant="outline" size="md" onClick={() => fileInput.current?.click()}>
             <Upload size={15} />
             Image
           </Button>
@@ -574,7 +574,7 @@ export function PageEditor({
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
         <div
           ref={scroller}
-          className="grid min-h-0 flex-1 place-items-center overflow-auto bg-plate-deep p-6"
+          className="grid min-h-0 flex-1 place-items-center overflow-auto bg-sunken p-6"
         >
           <div
             ref={surface}
@@ -616,8 +616,8 @@ export function PageEditor({
                   }}
                   className={`absolute outline ${editing ? 'cursor-text' : 'cursor-move'} ${
                     active
-                      ? 'outline-2 outline-violet'
-                      : 'outline-1 outline-transparent hover:outline-[var(--violet)]'
+                      ? 'outline-2 outline-ink'
+                      : 'outline-1 outline-transparent hover:outline-[var(--ink)]'
                   }`}
                   style={{
                     left: `${a.x * 100}%`,
@@ -672,21 +672,21 @@ export function PageEditor({
                       <span
                         onPointerDown={(e) => onPointerDown(e, a.id, 'rotate')}
                         title="Drag to rotate — hold Shift to snap to 15°"
-                        className="absolute -top-10 left-1/2 grid h-7 w-7 -translate-x-1/2 cursor-grab place-items-center rounded-full bg-violet text-violet-ink shadow-[var(--shadow-card)] active:cursor-grabbing"
+                        className="absolute -top-10 left-1/2 grid h-7 w-7 -translate-x-1/2 cursor-grab place-items-center rounded-full bg-action text-action-ink shadow-[var(--shadow)] active:cursor-grabbing"
                         style={{ touchAction: 'none' }}
                       >
                         <RotateCw size={14} />
                       </span>
-                      <span className="pointer-events-none absolute -top-3.5 left-1/2 h-3.5 w-px -translate-x-1/2 bg-violet" />
+                      <span className="pointer-events-none absolute -top-3.5 left-1/2 h-3.5 w-px -translate-x-1/2 bg-action" />
                       {spinning && (
-                        <span className="pointer-events-none absolute -top-[4.6rem] left-1/2 -translate-x-1/2 rounded-control bg-ink px-2 py-1 text-[11px] font-semibold text-plate">
+                        <span className="pointer-events-none absolute -top-[4.6rem] left-1/2 -translate-x-1/2 rounded-sm bg-ink px-2 py-1 text-[11px] font-semibold text-bg">
                           {Math.round(a.rotation)}°
                         </span>
                       )}
                       <span
                         onPointerDown={(e) => onPointerDown(e, a.id, 'resize')}
                         title={a.kind === 'text' ? 'Drag to resize the text' : 'Drag to resize'}
-                        className="absolute -bottom-2 -right-2 h-4 w-4 cursor-nwse-resize rounded-full border-2 border-violet bg-surface"
+                        className="absolute -bottom-2 -right-2 h-4 w-4 cursor-nwse-resize rounded-full border-2 border-ink bg-surface"
                         style={{ touchAction: 'none' }}
                       />
                     </>
@@ -697,9 +697,9 @@ export function PageEditor({
           </div>
         </div>
 
-        <aside className="w-full shrink-0 overflow-y-auto border-t border-hairline p-5 lg:w-[300px] lg:border-l lg:border-t-0">
+        <aside className="w-full shrink-0 overflow-y-auto border-t border-line p-5 lg:w-[300px] lg:border-l lg:border-t-0">
           {!selected && (
-            <p className="text-[14px] leading-relaxed text-body">
+            <p className="text-[14px] leading-relaxed text-ink-2">
               Add text, a cover box, your signature or an image. Click anything on the page to
               select it, drag to move, grab the round handle above it to rotate, and pull the
               corner dot to resize.
@@ -709,7 +709,7 @@ export function PageEditor({
           {selected && (
             <div className="space-y-5">
               <div className="flex items-center justify-between">
-                <span className="label">
+                <span className="meta">
                   {selected.kind === 'text' ? 'Text' : selected.kind === 'box' ? 'Cover' : 'Image'}
                 </span>
                 <div className="flex gap-1">
@@ -721,7 +721,7 @@ export function PageEditor({
                     aria-label="Delete"
                     title="Delete"
                     onClick={() => remove(selected.id)}
-                    className="grid h-9 w-9 place-items-center rounded-control text-body transition-colors duration-200 hover:bg-caution-wash hover:text-caution"
+                    className="grid h-9 w-9 place-items-center rounded-sm text-ink-2 transition-colors duration-200 hover:bg-danger-bg hover:text-danger"
                   >
                     <Trash2 size={15} />
                   </button>
@@ -731,22 +731,22 @@ export function PageEditor({
               {text && (
                 <>
                   <label className="block">
-                    <span className="label">Content</span>
+                    <span className="meta">Content</span>
                     <textarea
                       value={text.text}
                       onChange={(e) => update(text.id, { text: e.target.value })}
                       rows={3}
-                      className="mt-2 w-full resize-y rounded-control border border-hairline bg-surface px-3 py-2 text-[14px] outline-none focus:border-violet"
+                      className="mt-2 w-full resize-y rounded-sm border border-line bg-surface px-3 py-2 text-[14px] outline-none focus:border-ink"
                     />
                   </label>
 
                   <div className="grid grid-cols-2 gap-3">
                     <label className="block">
-                      <span className="label">Font</span>
+                      <span className="meta">Font</span>
                       <select
                         value={text.fontId}
                         onChange={(e) => update(text.id, { fontId: e.target.value as FontId })}
-                        className="mt-2 w-full rounded-control border border-hairline bg-surface px-2 py-2 text-[14px] outline-none focus:border-violet"
+                        className="mt-2 w-full rounded-sm border border-line bg-surface px-2 py-2 text-[14px] outline-none focus:border-ink"
                       >
                         {(Object.keys(FONT_LABELS) as FontId[]).map((f) => (
                           <option key={f} value={f}>
@@ -756,14 +756,14 @@ export function PageEditor({
                       </select>
                     </label>
                     <label className="block">
-                      <span className="label">Size (pt)</span>
+                      <span className="meta">Size (pt)</span>
                       <input
                         type="number"
                         min={4}
                         max={400}
                         value={text.size}
                         onChange={(e) => update(text.id, { size: Number(e.target.value) || 12 })}
-                        className="mt-2 w-full rounded-control border border-hairline bg-surface px-3 py-2 text-[14px] outline-none focus:border-violet"
+                        className="mt-2 w-full rounded-sm border border-line bg-surface px-3 py-2 text-[14px] outline-none focus:border-ink"
                       />
                     </label>
                   </div>
@@ -783,7 +783,7 @@ export function PageEditor({
                     >
                       <Italic size={15} />
                     </Toggle>
-                    <span className="mx-1 w-px bg-[var(--hairline)]" />
+                    <span className="mx-1 w-px bg-[var(--line)]" />
                     {(
                       [
                         ['left', AlignLeft],
@@ -807,12 +807,12 @@ export function PageEditor({
               {selected.kind !== 'image' && (
                 <div className="space-y-3">
                   <label className="flex items-center justify-between gap-3">
-                    <span className="label">{selected.kind === 'box' ? 'Fill' : 'Colour'}</span>
+                    <span className="meta">{selected.kind === 'box' ? 'Fill' : 'Colour'}</span>
                     <input
                       type="color"
                       value={selected.color}
                       onChange={(e) => update(selected.id, { color: e.target.value })}
-                      className="h-9 w-14 cursor-pointer rounded border border-hairline bg-transparent"
+                      className="h-9 w-14 cursor-pointer rounded border border-line bg-transparent"
                     />
                   </label>
 
@@ -820,7 +820,7 @@ export function PageEditor({
                     <button
                       type="button"
                       onClick={() => void matchBackground(selected.id)}
-                      className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-control border border-hairline text-[13px] font-semibold text-body transition-colors duration-200 hover:border-violet hover:text-violet"
+                      className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-sm border border-line text-[13px] font-semibold text-ink-2 transition-colors duration-200 hover:border-ink hover:text-ink"
                     >
                       <Pipette size={14} />
                       Match background here
@@ -830,7 +830,7 @@ export function PageEditor({
               )}
 
               <label className="block">
-                <span className="label">Rotation — {Math.round(selected.rotation)}°</span>
+                <span className="meta">Rotation — {Math.round(selected.rotation)}°</span>
                 <input
                   type="range"
                   min={-180}
@@ -843,7 +843,7 @@ export function PageEditor({
               </label>
 
               <label className="block">
-                <span className="label">Opacity — {Math.round(selected.opacity * 100)}%</span>
+                <span className="meta">Opacity — {Math.round(selected.opacity * 100)}%</span>
                 <input
                   type="range"
                   min={0.05}
@@ -855,7 +855,7 @@ export function PageEditor({
                 />
               </label>
 
-              <p className="text-[12px] leading-relaxed text-muted">
+              <p className="text-[12px] leading-relaxed text-ink-3">
                 Arrow keys nudge, Shift+arrows move further. Ctrl +/− zooms, Ctrl 0 fits.
                 Double-click text to edit it on the page.
               </p>
@@ -863,18 +863,18 @@ export function PageEditor({
           )}
 
           {/* Export option, kept out of the way of the drawing tools. */}
-          <details className="mt-8 border-t border-hairline pt-4">
-            <summary className="flex cursor-pointer items-center gap-2 text-[13px] font-semibold text-body">
+          <details className="mt-8 border-t border-line pt-4">
+            <summary className="tap flex cursor-pointer items-center gap-2 text-[13px] font-semibold text-ink-2">
               <input
                 type="checkbox"
                 checked={flattened}
                 onChange={onToggleFlatten}
                 onClick={(e) => e.stopPropagation()}
-                className="h-4 w-4 cursor-pointer accent-[var(--violet)]"
+                className="h-4 w-4 cursor-pointer accent-[var(--ink)]"
               />
               Flatten this page on export
             </summary>
-            <p className="mt-2 text-[12px] leading-relaxed text-muted">
+            <p className="mt-2 text-[12px] leading-relaxed text-ink-3">
               A cover box hides text but leaves it in the file, still selectable. Flattening
               replaces the page with a picture of it, so covered content is genuinely gone. Your
               added text stays sharp. The page stops being searchable and the file grows.
@@ -914,7 +914,7 @@ function IconBtn({
       disabled={disabled}
       aria-label={label}
       title={label}
-      className="tap grid h-9 w-9 place-items-center rounded-control text-body transition-colors duration-200 hover:bg-violet-wash hover:text-violet disabled:opacity-30"
+      className="tap grid h-9 w-9 place-items-center rounded-sm text-ink-2 transition-colors duration-200 hover:bg-sunken hover:text-ink disabled:opacity-30"
     >
       {children}
     </button>
@@ -939,10 +939,10 @@ function Toggle({
       aria-pressed={on}
       aria-label={label}
       title={label}
-      className={`grid h-9 w-9 place-items-center rounded-control border transition-colors duration-200 ${
+      className={`grid h-9 w-9 place-items-center rounded-sm border transition-colors duration-200 ${
         on
-          ? 'border-violet bg-violet text-violet-ink'
-          : 'border-hairline text-body hover:border-violet hover:text-violet'
+          ? 'border-ink bg-action text-action-ink'
+          : 'border-line text-ink-2 hover:border-ink hover:text-ink'
       }`}
     >
       {children}

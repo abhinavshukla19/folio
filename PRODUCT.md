@@ -65,9 +65,17 @@ limits and accounts. Their look is the category default and worth avoiding.
 - Name: **Folio**.
 - **Voice is plain and factual.** No clever headline constructions, no
   fragments used as sentences, no slogans. Describe what the thing does.
-- Violet is the single acting colour. Exactly one gradient exists in the whole
-  product — the ribbon in the hero — and nothing else gets one.
-- Manrope throughout.
+- **A lit work surface in a dim room.** Three planes carry the whole
+  structure: the room you stand in, the table raised out of it, and the
+  recesses cut into the table where work goes. Raised things take an offset
+  shadow, cut things take an inner one, and nothing is a card.
+- **There is no brand colour.** The colour on screen is whatever is inside the
+  document you opened. The one hue belonging to the interface is the
+  safelight amber, and it marks residency and live state only.
+- Light and dark are two different rooms rather than one inverted: a daylight
+  studio and a darkroom.
+- Bricolage Grotesque for display, Public Sans for text, Spline Sans Mono for
+  data. The mono appears only where a real number does, never as a label.
 
 ## Principles
 

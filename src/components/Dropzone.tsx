@@ -1,4 +1,3 @@
-import { Upload } from 'lucide-react'
 import { useRef, useState, type ReactNode } from 'react'
 
 type Props = {
@@ -8,6 +7,29 @@ type Props = {
   title: string
   hint: ReactNode
   compact?: boolean
+}
+
+/** A sheet, drawn in the same stroke as the slot diagrams on the home screen. */
+function SheetMark() {
+  return (
+    <svg viewBox="0 0 32 40" fill="none" className="h-10 w-8" aria-hidden="true">
+      <rect
+        x="1"
+        y="1"
+        width="30"
+        height="38"
+        rx="2.5"
+        fill="var(--sheet)"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <g stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" opacity="0.3">
+        <line x1="7" y1="12" x2="25" y2="12" />
+        <line x1="7" y1="19" x2="25" y2="19" />
+        <line x1="7" y1="26" x2="18" y2="26" />
+      </g>
+    </svg>
+  )
 }
 
 export function Dropzone({ accept, multiple = false, onFiles, title, hint, compact }: Props) {
@@ -48,9 +70,21 @@ export function Dropzone({ accept, multiple = false, onFiles, title, hint, compa
         setOver(false)
         take(e.dataTransfer.files)
       }}
-      className={`flex flex-col items-center justify-center rounded-part border-2 border-dashed text-center transition-colors duration-200 ${
-        over ? 'border-violet bg-violet-wash' : 'border-[var(--hairline-strong)] bg-surface'
-      } ${compact ? 'px-6 py-10' : 'px-6 py-24 sm:py-32'}`}
+      onClick={() => input.current?.click()}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          input.current?.click()
+        }
+      }}
+      /* A slot cut into the table, not a box drawn on it. Light spills in when
+         you point at it; when a file is actually over it, the safelight comes
+         on, because something is about to become resident. */
+      className={`slot recess flex cursor-pointer flex-col items-center justify-center rounded-[6px] text-center ${
+        over ? 'slot-armed' : ''
+      } ${compact ? 'px-5 py-8' : 'h-full px-5 py-14 sm:py-16'}`}
     >
       <input
         ref={input}
@@ -58,32 +92,23 @@ export function Dropzone({ accept, multiple = false, onFiles, title, hint, compa
         accept={accept}
         multiple={multiple}
         className="sr-only"
+        onClick={(e) => e.stopPropagation()}
         onChange={(e) => {
           take(e.target.files)
           e.target.value = '' // let the same file be picked again after a clear
         }}
       />
 
-      <span
-        className={`grid place-items-center rounded-full bg-violet-wash text-violet ${
-          compact ? 'h-11 w-11' : 'h-14 w-14'
-        }`}
-      >
-        <Upload size={compact ? 18 : 22} />
-      </span>
+      {!compact && (
+        <span className={`mb-5 block ${over ? 'text-signal' : 'text-ink-faint'}`}>
+          <SheetMark />
+        </span>
+      )}
 
-      <h2 className={`font-bold tracking-[-0.02em] ${compact ? 'mt-4 text-[16px]' : 'mt-6 text-[20px]'}`}>
+      <p className={`font-semibold tracking-[-0.01em] ${compact ? 'text-[14px]' : 'text-[17px]'}`}>
         {title}
-      </h2>
-      <p className="mt-2 max-w-sm text-[15px] leading-relaxed text-body">{hint}</p>
-
-      <button
-        type="button"
-        onClick={() => input.current?.click()}
-        className="mt-6 inline-flex h-11 items-center rounded-control bg-violet px-6 text-[14px] font-semibold text-violet-ink transition-colors duration-200 hover:bg-violet-press"
-      >
-        Choose {multiple ? 'files' : 'file'}
-      </button>
+      </p>
+      <p className="mt-1.5 max-w-[46ch] text-[13.5px] leading-relaxed text-ink-quiet">{hint}</p>
     </div>
   )
 }

@@ -23,8 +23,8 @@ export function FileNameField({
 }) {
   return (
     <label className="flex min-w-0 items-center gap-2">
-      <span className="label shrink-0">{label}</span>
-      <span className="flex min-w-0 items-center rounded-control border border-hairline bg-surface focus-within:border-violet">
+      <span className="shrink-0 text-[13px] text-ink-quiet">{label}</span>
+      <span className="recess flex min-w-0 items-center rounded-[4px] focus-within:shadow-[var(--cut-deep),0_0_0_2px_var(--ink)]">
         <input
           value={value}
           // Illegal characters are stripped as they are typed, so the field
@@ -35,9 +35,9 @@ export function FileNameField({
           onBlur={(e) => onChange(cleanFileName(e.target.value))}
           spellCheck={false}
           aria-label="File name"
-          className="w-[10rem] min-w-0 bg-transparent px-2.5 py-1.5 text-[13px] outline-none"
+          className="w-[10rem] min-w-0 bg-transparent px-2.5 py-1.5 text-[13.5px] font-medium outline-none"
         />
-        <span className="shrink-0 pr-2.5 text-[13px] text-muted">.pdf</span>
+        <span className="data shrink-0 pr-2.5 text-[13px] text-ink-faint">.pdf</span>
       </span>
     </label>
   )

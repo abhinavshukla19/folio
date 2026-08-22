@@ -1,117 +1,142 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/manrope/wght.css';
+@import '@fontsource-variable/bricolage-grotesque/wght.css';
+@import '@fontsource-variable/public-sans/wght.css';
+@import '@fontsource-variable/spline-sans-mono/wght.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ─────────────────────────────────────────────────────────────
-   FOLIO — Civic Bureau
+/* -------------------------------------------------------------
+   A lit work surface in a dim room.
 
-   A late-modern institutional system: near-white plate, deep indigo
-   ink that is never pure black, hairline structure, and violet as
-   the single acting colour.
+   Three planes, and they are the whole structure: the ROOM you
+   are standing in, the TABLE that is lit, and the RECESSES cut
+   into the table where work goes. Nothing is a card. Raised
+   things carry an offset shadow; cut things carry an inner one.
 
-   One gradient exists in this entire product — the ribbon, the
-   world's signature material. Nothing else on any surface gets one.
+   There is no brand colour. The colour on screen is whatever is
+   inside the document you opened. The one hue that belongs to
+   the interface is the safelight -- the single lamp a darkroom
+   allows, because it does not expose what you are working on.
+   It marks residency and live state, and nothing else.
+   ------------------------------------------------------------- */
 
-   Light and dark are authored separately. Dark is not the light
-   theme inverted; it is the same bureau after hours, the plate
-   going to deep indigo rather than to black.
-   ───────────────────────────────────────────────────────────── */
+/* Daylight studio: a cool concrete desk, a bright table, short
+   soft shadows, and paper as the whitest thing on screen. */
 :root {
-  --plate: #f7f7fa;
-  --plate-deep: #eeeef4;
-  --surface: #ffffff;
+  --room: #d7d9dd;
+  --table: #ffffff;
+  --recess: #edeff2;
+  --sheet: #ffffff;
 
-  --ink: #1b1547;
-  --body: #4b5165;
-  --muted: #6b7089;
+  --ink: #14161a;
+  --ink-quiet: #4f565f;
+  /* Clears 4.5:1 on the table and in a recess. It cannot clear it on the
+     ROOM -- a mid-tone is not a text surface. Text on the room is --ink or
+     --ink-quiet, never this. */
+  --ink-faint: #656d77;
 
-  --hairline: #e6e7ee;
-  --hairline-strong: #d3d5e2;
+  --edge: #c9ced5;
+  --edge-soft: #dfe3e8;
+  /* A slider track has to read against the table it sits on, which --edge
+     is too quiet to do. It is the only rule this token serves. */
+  --track: #8b94a0;
 
-  --violet: #6b5ce7;
-  --violet-press: #4a3bc4;
-  --violet-ink: #ffffff;
-  --violet-wash: #efedfd;
+  --signal: #9a5400;
+  --signal-fill: #c97b0a;
+  --stop: #a3231b;
+  --stop-wash: #fbeceb;
 
-  --positive: #17806a;
-  --caution: #b4325c;
-  --caution-wash: #fdeef3;
-
-  --ribbon-1: #7fd8d0;
-  --ribbon-2: #c9b8f0;
-  --ribbon-3: #5b4fd6;
-  --ribbon-opacity: 1;
-
-  --page: #ffffff;
-  --page-line: rgb(27 21 71 / 0.14);
-
-  --shadow-card: 0 1px 2px rgb(27 21 71 / 0.04), 0 12px 32px -14px rgb(27 21 71 / 0.16);
-  --shadow-lift: 0 2px 6px rgb(27 21 71 / 0.06), 0 24px 48px -18px rgb(27 21 71 / 0.24);
+  /* Raised: light falls from above, so the offset is positive and
+     the blur is short. */
+  --lift-1: 0 1px 2px -1px rgb(20 22 26 / 0.16), 0 2px 6px -2px rgb(20 22 26 / 0.10);
+  --lift-2: 0 2px 4px -2px rgb(20 22 26 / 0.14), 0 14px 34px -14px rgb(20 22 26 / 0.22);
+  /* Cut into the surface: the shadow is inside, along the top lip. */
+  --cut: inset 0 1px 3px rgb(20 22 26 / 0.10), inset 0 0 0 1px rgb(20 22 26 / 0.05);
+  --cut-deep: inset 0 2px 6px rgb(20 22 26 / 0.13), inset 0 0 0 1px rgb(20 22 26 / 0.07);
+  /* The lip catching light along a raised top edge. */
+  --rim: inset 0 1px 0 rgb(255 255 255 / 0.9);
 }
 
+/* Darkroom: the room falls away, the table is the only elevated
+   plane, and the sheet is the light source rather than a surface. */
 .dark {
-  --plate: #0e0b24;
-  --plate-deep: #08061a;
-  --surface: #17123a;
+  --room: #0c0e11;
+  --table: #171a1f;
+  --recess: #101317;
+  --sheet: #ffffff;
 
-  --ink: #f3f2fc;
-  --body: #c0bddd;
-  --muted: #9995c0;
+  --ink: #eceef1;
+  --ink-quiet: #98a0aa;
+  --ink-faint: #7e8691;
 
-  --hairline: #2a2458;
-  --hairline-strong: #3a3370;
+  --edge: #2a2f37;
+  --edge-soft: #21252b;
+  --track: #626b7a;
 
-  --violet: #9284f7;
-  --violet-press: #b0a4ff;
-  --violet-ink: #14103a;
-  --violet-wash: #221c52;
+  --signal: #ffb53d;
+  --signal-fill: #ffb53d;
+  --stop: #ff6b5e;
+  --stop-wash: #2a1512;
 
-  --positive: #5fd6bb;
-  --caution: #ff8fab;
-  --caution-wash: #3a1730;
-
-  --ribbon-1: #7fd8d0;
-  --ribbon-2: #a08ee8;
-  --ribbon-3: #5b4fd6;
-  --ribbon-opacity: 0.7;
-
-  --page: #f4f3fb;
-  --page-line: rgb(27 21 71 / 0.18);
-
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.45), 0 14px 34px -16px rgb(0 0 0 / 0.7);
-  --shadow-lift: 0 2px 8px rgb(0 0 0 / 0.55), 0 28px 56px -20px rgb(0 0 0 / 0.8);
+  /* A dark room swallows short shadows, so they run longer and
+     a rim light does the work the shadow used to. */
+  --lift-1: 0 1px 2px -1px rgb(0 0 0 / 0.7), 0 3px 8px -3px rgb(0 0 0 / 0.6);
+  --lift-2: 0 2px 6px -3px rgb(0 0 0 / 0.7), 0 22px 60px -22px rgb(0 0 0 / 0.85);
+  --cut: inset 0 1px 3px rgb(0 0 0 / 0.55), inset 0 0 0 1px rgb(255 255 255 / 0.03);
+  --cut-deep: inset 0 2px 7px rgb(0 0 0 / 0.7), inset 0 0 0 1px rgb(255 255 255 / 0.04);
+  --rim: inset 0 1px 0 rgb(255 255 255 / 0.06);
 }
 
 @theme inline {
-  --color-plate: var(--plate);
-  --color-plate-deep: var(--plate-deep);
-  --color-surface: var(--surface);
+  --color-room: var(--room);
+  --color-table: var(--table);
+  --color-recess: var(--recess);
+  --color-sheet: var(--sheet);
   --color-ink: var(--ink);
-  --color-body: var(--body);
-  --color-muted: var(--muted);
-  --color-hairline: var(--hairline);
-  --color-hairline-strong: var(--hairline-strong);
-  --color-violet: var(--violet);
-  --color-violet-press: var(--violet-press);
-  --color-violet-ink: var(--violet-ink);
-  --color-violet-wash: var(--violet-wash);
-  --color-positive: var(--positive);
-  --color-caution: var(--caution);
-  --color-caution-wash: var(--caution-wash);
-  --color-page: var(--page);
+  --color-ink-quiet: var(--ink-quiet);
+  --color-ink-faint: var(--ink-faint);
+  --color-edge: var(--edge);
+  --color-edge-soft: var(--edge-soft);
+  --color-track: var(--track);
+  --color-signal: var(--signal);
+  --color-signal-fill: var(--signal-fill);
+  --color-stop: var(--stop);
+  --color-stop-wash: var(--stop-wash);
 
-  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  /* -- legacy aliases -------------------------------------
+     Screens 2-4 still speak the old vocabulary. Pointing the
+     old names at the new planes moves the whole app onto this
+     palette now, and each screen sheds its aliases as it is
+     rebuilt. Nothing here is a new colour. */
+  --color-bg: var(--room);
+  --color-surface: var(--table);
+  --color-sunken: var(--recess);
+  --color-page: var(--sheet);
+  --color-ink-2: var(--ink-quiet);
+  --color-ink-3: var(--ink-faint);
+  --color-line: var(--edge);
+  --color-line-strong: var(--edge);
+  --color-action: var(--ink);
+  --color-action-ink: var(--table);
+  --color-action-hover: var(--ink-quiet);
+  --color-danger: var(--stop);
+  --color-danger-bg: var(--stop-wash);
 
-  --radius-part: 10px;
-  --radius-control: 8px;
+  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Public Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Spline Sans Mono Variable', ui-monospace, monospace;
 
-  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+
+  /* Exponential ease-out. Motion arrives fast and settles. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
   * {
-    border-color: var(--hairline);
+    border-color: var(--edge);
   }
 
   html {
@@ -119,22 +144,34 @@
   }
 
   body {
-    background-color: var(--plate);
+    background-color: var(--room);
     color: var(--ink);
     font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
     overflow-x: hidden;
   }
 
+  /* -- Surfaces the browser draws, not us -----------------
+     Selection, caret, scrollbar and focus ship with defaults
+     that belong to no design system. */
   ::selection {
-    background: var(--violet);
-    color: var(--violet-ink);
+    background: color-mix(in srgb, var(--signal-fill) 34%, transparent);
+    color: var(--ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--violet);
-    outline-offset: 2px;
-    border-radius: 4px;
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  input,
+  textarea,
+  [contenteditable] {
+    caret-color: var(--signal);
   }
 
   ::-webkit-scrollbar {
@@ -142,19 +179,69 @@
     height: 12px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--plate-deep);
+    background: var(--room);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--hairline-strong);
+    background: var(--edge);
     border-radius: 99px;
-    border: 3px solid var(--plate-deep);
+    border: 3px solid var(--room);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--muted);
+    background: var(--ink-faint);
+  }
+  * {
+    scrollbar-color: var(--edge) var(--room);
   }
 
+  a:not([class]) {
+    color: var(--ink);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  /* Drawn rather than accent-coloured: the native track is a hairline that
+     disappears on a dark panel, and the thumb needs the same raised language
+     as every other control here. */
   input[type='range'] {
-    accent-color: var(--violet);
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    width: 100%;
+    /* Without a height the element collapses to the 4px track and clips its
+       own thumb, leaving a 4px hit target. */
+    height: 20px;
+  }
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 99px;
+    background: var(--track);
+  }
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    margin-top: -5.5px;
+    border-radius: 50%;
+    background: var(--signal-fill);
+    border: 2px solid var(--table);
+    box-shadow: var(--lift-1);
+  }
+  input[type='range']::-moz-range-track {
+    height: 4px;
+    border-radius: 99px;
+    background: var(--track);
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border: 2px solid var(--table);
+    border-radius: 50%;
+    background: var(--signal-fill);
+    box-shadow: var(--lift-1);
+  }
+  input[type='range']:disabled {
+    opacity: 0.4;
   }
 
   a[href],
@@ -166,12 +253,131 @@
   }
 }
 
-/* Card controls appear on hover. A device with no hover has no way to reveal
-   them, so there they stay visible — hiding a delete button behind an
-   interaction the hardware cannot perform would remove it entirely. */
+/* -------------------------------------------------------------
+   Type roles. Three faces, three jobs, no overlap.
+   ------------------------------------------------------------- */
+
+/* Display. Bricolage carries its character in the weight axis --
+   flared stems, a two-storey g that narrows under load -- so the
+   width axis is not worth the 88kB it costs to ship. Used for the
+   one heading per screen and the wordmark, nothing else. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 645;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+/* Data. Only where a real number lives: counts, bytes, timers,
+   dimensions. Never a decorative label. */
+.data {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'zero' 1;
+  letter-spacing: -0.01em;
+}
+
+/* -------------------------------------------------------------
+   The three planes
+   ------------------------------------------------------------- */
+
+/* Raised out of the room. */
+.table-plane {
+  background-color: var(--table);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--lift-2), var(--rim);
+}
+
+/* Cut into the table. The inner shadow is what separates this
+   from a card, and it is why these never carry a border. */
+.recess {
+  background-color: var(--recess);
+  box-shadow: var(--cut);
+}
+
+/* A sheet of paper lying on the table.
+
+   These are real classes rather than Tailwind arbitrary values on purpose:
+   two `shadow-[var(--lift-2),0_0_0_...]` candidates that share a long prefix
+   collide during candidate parsing, and the later one silently wins for both.
+   Paper has no outline of its own, so an unselected sheet carries only its
+   shadow -- the ring is the mark, never the edge. */
+.sheet {
+  background-color: var(--sheet);
+  border-radius: 3px;
+  box-shadow: var(--lift-1);
+  /* transform only. A box-shadow built from custom properties does not
+     recompute here when the class changes -- the element stays stuck on its
+     previous shadow -- so selection snaps rather than fades. */
+  transition: transform 0.2s var(--ease-out);
+}
+.group:hover > .sheet:not(.sheet-selected):not(.sheet-focused) {
+  transform: translateY(-2px);
+  box-shadow: var(--lift-2);
+}
+.sheet-selected {
+  box-shadow: var(--lift-2), 0 0 0 2px var(--ink);
+}
+.sheet-focused {
+  box-shadow: var(--lift-2), 0 0 0 1.5px var(--ink-faint);
+}
+.sheet-dragging {
+  box-shadow: var(--lift-2);
+}
+
+/* -- legacy surface, retired screen by screen -------------- */
+.panel {
+  background-color: var(--table);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-md);
+}
+.meta {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink-faint);
+}
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.row-link {
+  transition: background-color 0.14s var(--ease-out);
+}
+.row-link:hover {
+  background-color: var(--recess);
+}
+
+/* -------------------------------------------------------------
+   Interaction
+   ------------------------------------------------------------- */
+
+/* Light spills into whichever recess you point at: the cut fills
+   toward the table's own tone and the shadow inside it softens.
+
+   Deliberately untransitioned. Both properties are fed by custom properties,
+   and a transitioned custom-property value does not recompute when the class
+   driving it changes -- .slot-armed below is exactly that, and it silently
+   kept the resting look. The one authored moment here is the table lighting
+   up; this does not need to be a second one. */
+.slot:hover,
+.slot:focus-visible {
+  background-color: var(--table);
+  box-shadow: var(--cut-deep);
+}
+
+/* A file is over the socket and about to become resident, so the safelight
+   comes on. The only place the hue appears before a file is loaded. */
+.slot-armed {
+  background-color: var(--table);
+  box-shadow: var(--cut-deep), inset 0 0 0 2px var(--signal-fill);
+}
+
 .on-hover {
   opacity: 0;
-  transition: opacity 0.2s var(--ease-out-quint);
+  transition: opacity 0.16s var(--ease-out);
 }
 .group:hover .on-hover,
 .on-hover:focus-within {
@@ -183,124 +389,60 @@
   }
 }
 
-/* Compact controls stay compact for a mouse but reach the 44px touch
-   minimum on a coarse pointer. Scoped to a class so inline links in
-   prose are never turned into 44px blocks. */
 @media (pointer: coarse) {
   .tap {
     min-height: 44px;
     min-width: 44px;
   }
+  input[type='range'] {
+    height: 44px;
+  }
+  input[type='checkbox'] {
+    min-height: 24px;
+    min-width: 24px;
+  }
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Type
-   ───────────────────────────────────────────────────────────── */
-.display {
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-}
+/* -------------------------------------------------------------
+   The one authored moment: the table lights up.
 
-.label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
+   The content is already there -- only the illumination resolves.
+   Transform and opacity only, so it stays on the compositor and
+   never touches a custom property mid-transition.
+   ------------------------------------------------------------- */
+.lights-up {
+  animation: lights-up 900ms var(--ease-out) both;
 }
-
-.figure {
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Surfaces — hairline structure, no glass, no gradient
-   ───────────────────────────────────────────────────────────── */
-.card {
-  background-color: var(--surface);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-part);
-}
-
-.card-quiet {
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-part);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Interaction — compositor-only, and nothing changes an element's
-   box, so the page never shifts under the pointer.
-   ───────────────────────────────────────────────────────────── */
-.hoverable {
-  transition:
-    border-color 0.22s var(--ease-out-quint),
-    box-shadow 0.28s var(--ease-out-quint),
-    transform 0.28s var(--ease-out-quint),
-    background-color 0.22s var(--ease-out-quint);
-}
-.hoverable:hover {
-  border-color: var(--violet);
-  box-shadow: var(--shadow-lift);
-  transform: translateY(-3px);
-}
-
-/* Underline that draws in from the left. */
-.u-draw {
-  position: relative;
-}
-.u-draw::after {
+.lights-up::before {
   content: '';
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -3px;
-  height: 1.5px;
-  background: currentColor;
-  border-radius: 2px;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.34s var(--ease-out-quint);
-}
-.u-draw:hover::after,
-.u-draw:focus-visible::after {
-  transform: scaleX(1);
-}
-
-.arrow-slide {
-  transition: transform 0.3s var(--ease-out-quint);
-}
-.group:hover .arrow-slide {
-  transform: translateX(5px);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   The ribbon — the world's signature material, and the only
-   gradient permitted anywhere in this product.
-   ───────────────────────────────────────────────────────────── */
-.ribbon {
-  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--room);
   pointer-events: none;
-  opacity: var(--ribbon-opacity);
+  z-index: 1;
+  animation: dim-veil 900ms var(--ease-out) both;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Entrance
-   ───────────────────────────────────────────────────────────── */
-.reveal {
-  transition:
-    opacity 0.66s var(--ease-out-quint),
-    transform 0.66s var(--ease-out-quint);
+@keyframes lights-up {
+  from {
+    transform: translateY(10px) scale(0.994);
+  }
+  to {
+    transform: none;
+  }
 }
 
-.reveal[data-shown='false'] {
-  opacity: 0;
-  transform: translateY(16px);
-  will-change: opacity, transform;
+@keyframes dim-veil {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
+/* Applied only while the theme is being swapped -- see lib/theme.ts */
 .theme-switching,
 .theme-switching *,
 .theme-switching *::before,
@@ -310,15 +452,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .lights-up,
+  .lights-up::before {
+    animation: none;
+  }
+  .lights-up::before {
+    display: none;
+  }
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-  }
-  .reveal[data-shown='false'] {
-    opacity: 1;
-    transform: none;
   }
 }

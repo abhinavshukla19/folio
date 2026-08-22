@@ -19,6 +19,7 @@ import { Download, GripVertical, Trash2 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { Dropzone } from '../../components/Dropzone'
+import { Intake } from '../../components/Intake'
 import { FileNameField, cleanFileName } from '../../components/FileNameField'
 import { Workspace, WorkspaceError } from '../Workspace'
 import { downloadBlob, mergePdfs } from '../../lib/pdf/export'
@@ -60,20 +61,20 @@ function SortableDoc({
         transition,
         boxShadow: isDragging ? 'var(--shadow-lift)' : undefined,
       }}
-      className={`card group relative flex items-center gap-4 p-3 ${isDragging ? 'z-20' : ''}`}
+      className={`panel group relative flex items-center gap-4 p-3 ${isDragging ? 'z-20' : ''}`}
     >
       <span
         {...attributes}
         {...listeners}
         title="Drag to reorder"
-        className="grid h-10 w-6 shrink-0 cursor-grab touch-none place-items-center text-muted active:cursor-grabbing"
+        className="grid h-10 w-6 shrink-0 cursor-grab touch-none place-items-center text-ink-3 active:cursor-grabbing"
       >
         <GripVertical size={16} />
       </span>
 
-      <span className="figure w-6 shrink-0 text-[13px] text-violet">{index + 1}</span>
+      <span className="mono w-6 shrink-0 text-[13px] text-ink">{index + 1}</span>
 
-      <span className="h-16 w-12 shrink-0 overflow-hidden rounded-[4px] bg-page ring-1 ring-[var(--hairline-strong)]">
+      <span className="h-16 w-12 shrink-0 overflow-hidden rounded-[4px] bg-page ring-1 ring-[var(--line-strong)]">
         {doc.thumb && (
           <img src={doc.thumb} alt="" className="h-full w-full object-contain" draggable={false} />
         )}
@@ -83,7 +84,7 @@ function SortableDoc({
         <span className="block truncate text-[14px] font-semibold" title={doc.name}>
           {doc.name}
         </span>
-        <span className="mt-0.5 block text-[12px] text-muted">
+        <span className="mt-0.5 block text-[12px] text-ink-3">
           {doc.pageCount} page{doc.pageCount === 1 ? '' : 's'}
         </span>
       </span>
@@ -93,7 +94,7 @@ function SortableDoc({
         aria-label={`Remove ${doc.name}`}
         title="Remove"
         onClick={() => onRemove(doc.id)}
-        className="on-hover grid h-9 w-9 shrink-0 place-items-center rounded-control text-body transition-colors duration-200 hover:bg-caution-wash hover:text-caution"
+        className="on-hover grid h-9 w-9 shrink-0 place-items-center rounded-sm text-ink-2 transition-colors duration-200 hover:bg-danger-bg hover:text-danger"
       >
         <Trash2 size={15} />
       </button>
@@ -217,15 +218,25 @@ export function MergePdfs() {
 
   if (!docs.length) {
     return (
-      <Workspace item="03" title="Merge PDFs" subtitle={`Combine up to ${MAX_FILES} files into one.`}>
+      <Workspace title="Merge PDFs">
         {error && <WorkspaceError>{error}</WorkspaceError>}
-        <Dropzone
-          accept="application/pdf,.pdf"
-          multiple
-          onFiles={(files) => void add(files)}
-          title="Drop PDFs here"
-          hint={`Up to ${MAX_FILES} files. They stay on your device; nothing is sent anywhere.`}
-        />
+        <Intake
+          does={[
+            `Join up to ${MAX_FILES} documents into one.`,
+            'Drag the files into the order you want them.',
+            'Pages are joined top to bottom, in that order.',
+            'Name the result, then save it.',
+          ]}
+          limit="Password-protected PDFs cannot be opened. Remove the password in your PDF reader first."
+        >
+          <Dropzone
+            accept="application/pdf,.pdf"
+            multiple
+            onFiles={(files) => void add(files)}
+            title="Open several PDFs"
+            hint={`Choose up to ${MAX_FILES} files, or drop them here. They never leave your device.`}
+          />
+        </Intake>
       </Workspace>
     )
   }
@@ -241,8 +252,8 @@ export function MergePdfs() {
     >
       {error && <WorkspaceError>{error}</WorkspaceError>}
 
-      <div className="card mb-5 flex flex-wrap items-center gap-4 p-4">
-        <p className="text-[14px] text-body">
+      <div className="panel mb-5 flex flex-wrap items-center gap-4 p-4">
+        <p className="text-[14px] text-ink-2">
           Pages are joined top to bottom. Drag a file to change where it lands.
         </p>
         <div className="ml-auto flex flex-wrap items-center gap-3">
@@ -252,7 +263,7 @@ export function MergePdfs() {
             onClick={() => void save()}
             disabled={!!busy || docs.length < 2}
             title={docs.length < 2 ? 'Add a second PDF to merge' : undefined}
-            className="inline-flex h-9 items-center gap-2 rounded-control bg-violet px-5 text-[13px] font-semibold text-violet-ink transition-colors duration-200 hover:bg-violet-press disabled:opacity-40"
+            className="inline-flex h-9 items-center gap-2 rounded-sm bg-action px-5 text-[13px] font-semibold text-action-ink transition-colors duration-200 hover:bg-action-hover disabled:opacity-40"
           >
             <Download size={15} />
             Merge &amp; download
@@ -272,7 +283,7 @@ export function MergePdfs() {
 
       <div className="mt-5">
         {full ? (
-          <p className="card p-5 text-center text-[14px] text-body">
+          <p className="panel p-5 text-center text-[14px] text-ink-2">
             That is the limit of {MAX_FILES}. Remove a file to swap in another.
           </p>
         ) : (

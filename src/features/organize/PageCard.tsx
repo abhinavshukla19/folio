@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Check, Copy, PenLine, RotateCw, Trash2 } from 'lucide-react'
+import { Copy, PenLine, RotateCw, Trash2 } from 'lucide-react'
 import { AnnotationPreview } from './AnnotationPreview'
 import type { Annotation } from '../../lib/pdf/annotations'
 
@@ -31,13 +31,16 @@ type Props = {
   boxWidth: number
 }
 
-function IconButton({
+/** A tool that rides on the sheet. Raised, so it reads as sitting on paper. */
+function SheetTool({
   label,
   onClick,
+  danger,
   children,
 }: {
   label: string
   onClick: () => void
+  danger?: boolean
   children: React.ReactNode
 }) {
   return (
@@ -50,7 +53,9 @@ function IconButton({
         onClick()
       }}
       onPointerDown={(e) => e.stopPropagation()}
-      className="grid h-7 w-7 place-items-center rounded-full bg-surface text-body shadow-[var(--shadow-card)] ring-1 ring-[var(--hairline)] transition-colors duration-150 hover:bg-violet hover:text-violet-ink"
+      className={`grid h-7 w-7 place-items-center rounded-[4px] bg-table text-ink-quiet shadow-[var(--lift-1),var(--rim)] transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px ${
+        danger ? 'hover:bg-stop hover:text-table' : 'hover:bg-ink hover:text-table'
+      }`}
     >
       {children}
     </button>
@@ -77,6 +82,7 @@ export function PageCard({
   })
 
   const turned = Math.abs(page.rotation % 180) === 90
+  const edits = marks?.length ?? 0
 
   return (
     <div
@@ -99,17 +105,12 @@ export function PageCard({
             onToggle(page.id, e.ctrlKey || e.metaKey, e.shiftKey)
           }
         }}
-        className={`hoverable relative flex w-full cursor-grab touch-none items-center justify-center overflow-hidden rounded-[8px] bg-page outline-none ring-1 active:cursor-grabbing ${
-          selected
-            ? 'ring-2 ring-violet'
-            : focused
-              ? 'ring-2 ring-[var(--violet-press)]'
-              : 'ring-[var(--hairline-strong)]'
-        }`}
-        style={{
-          aspectRatio: aspect,
-          boxShadow: isDragging ? 'var(--shadow-lift)' : undefined,
-        }}
+        /* A sheet lying on the table. Paper has no outline of its own, so an
+           unselected page carries only its shadow; the ring is the mark. */
+        className={`sheet relative flex w-full cursor-grab touch-none items-center justify-center overflow-hidden outline-none active:cursor-grabbing ${
+          selected ? 'sheet-selected' : focused ? 'sheet-focused' : ''
+        } ${isDragging ? 'sheet-dragging' : ''}`}
+        style={{ aspectRatio: aspect }}
       >
         {thumb ? (
           <img
@@ -127,50 +128,52 @@ export function PageCard({
             }}
           />
         ) : (
-          <div className="absolute inset-0 bg-plate-deep" />
+          <div className="absolute inset-0 bg-recess" />
         )}
 
         {marks?.length ? <AnnotationPreview annotations={marks} boxWidth={boxWidth} /> : null}
+
+        {/* Delete is always to hand; the rest appear once a page is selected,
+            so an unselected grid stays a grid rather than a wall of buttons. */}
+        <div className="on-hover absolute inset-x-0 bottom-1.5 flex flex-wrap justify-center gap-1">
+          {selected && (
+            <>
+              <SheetTool label={`Edit page ${index + 1}`} onClick={() => onEdit(page.id)}>
+                <PenLine size={13} />
+              </SheetTool>
+              <SheetTool label={`Rotate page ${index + 1}`} onClick={() => onRotate(page.id)}>
+                <RotateCw size={13} />
+              </SheetTool>
+              <SheetTool label={`Duplicate page ${index + 1}`} onClick={() => onDuplicate(page.id)}>
+                <Copy size={13} />
+              </SheetTool>
+            </>
+          )}
+          <SheetTool label={`Delete page ${index + 1}`} danger onClick={() => onDelete(page.id)}>
+            <Trash2 size={13} />
+          </SheetTool>
+        </div>
       </div>
 
-      <span className="pointer-events-none absolute -left-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-surface px-1 text-[10px] font-bold text-muted shadow-[var(--shadow-card)] ring-1 ring-[var(--hairline)]">
-        {index + 1}
-      </span>
-
-      {selected && (
-        <span className="pointer-events-none absolute -right-1.5 -top-1.5 grid h-5 w-5 place-items-center rounded-full bg-violet text-violet-ink">
-          <Check size={11} strokeWidth={3} />
-        </span>
-      )}
-
-      {(marks?.length ?? 0) > 0 && !selected && (
+      {/* Frame numbering, the way a contact sheet carries it: under the frame,
+          not floating on top of the picture. */}
+      <div className="mt-2 flex items-center justify-center gap-1.5">
         <span
-          className="pointer-events-none absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-violet px-1 text-[10px] font-bold text-violet-ink"
-          title={`${marks?.length} edit${marks?.length === 1 ? '' : 's'} on this page`}
+          className={`data inline-flex h-5 min-w-5 items-center justify-center rounded-[3px] px-1 text-[11.5px] font-medium tabular-nums ${
+            selected ? 'bg-ink text-table' : 'text-ink-faint'
+          }`}
         >
-          {marks?.length}
+          {index + 1}
         </span>
-      )}
-
-      {/* Delete is always to hand; the rest appear once a page is selected,
-          so an unselected grid stays a grid rather than a wall of buttons. */}
-      <div className="on-hover absolute inset-x-0 bottom-1.5 flex flex-wrap justify-center gap-1">
-        {selected && (
-          <>
-            <IconButton label={`Edit page ${index + 1}`} onClick={() => onEdit(page.id)}>
-              <PenLine size={12} />
-            </IconButton>
-            <IconButton label={`Rotate page ${index + 1}`} onClick={() => onRotate(page.id)}>
-              <RotateCw size={12} />
-            </IconButton>
-            <IconButton label={`Duplicate page ${index + 1}`} onClick={() => onDuplicate(page.id)}>
-              <Copy size={12} />
-            </IconButton>
-          </>
+        {edits > 0 && (
+          <span
+            className="data inline-flex items-center gap-1 text-[11.5px] text-ink-quiet"
+            title={`${edits} edit${edits === 1 ? '' : 's'} on this page`}
+          >
+            <PenLine size={10} />
+            {edits}
+          </span>
         )}
-        <IconButton label={`Delete page ${index + 1}`} onClick={() => onDelete(page.id)}>
-          <Trash2 size={12} />
-        </IconButton>
       </div>
     </div>
   )

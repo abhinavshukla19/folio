@@ -1,13 +1,15 @@
-import { AlertTriangle, ArrowLeft, Loader2, X } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, Loader2 } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { Container } from '../components/ui'
+import { Button } from '../components/ui'
 import { navigate } from '../lib/useHashRoute'
 import { useIdleClear } from '../lib/useIdleClear'
 
 type Props = {
-  item: string
+  /** Retained so callers keep compiling; a screen is not a numbered step. */
+  item?: string
   title: string
-  subtitle?: string
+  /** A string, or the residency readout when a workspace is holding a file. */
+  subtitle?: ReactNode
   /** Runs the idle auto-clear. Off while the workspace is empty. */
   active?: boolean
   onClear?: () => void
@@ -15,87 +17,78 @@ type Props = {
   children: ReactNode
 }
 
-export function Workspace({ item, title, subtitle, active = false, onClear, busy, children }: Props) {
+export function Workspace({ title, subtitle, active = false, onClear, busy, children }: Props) {
   const idle = useIdleClear(active, () => onClear?.())
 
   return (
-    <div className="pb-24 pt-10">
-      <Container className="max-w-[92rem]">
-        <button
-          type="button"
-          onClick={() => navigate('home')}
-          className="u-draw mb-8 inline-flex items-center gap-2 text-[14px] font-medium text-body transition-colors duration-200 hover:text-violet"
-        >
-          <ArrowLeft size={15} />
-          All tools
-        </button>
+    <main id="main" className="mx-auto w-full max-w-[100rem] px-5 pb-24 pt-4 sm:px-8">
+      <button
+        type="button"
+        onClick={() => navigate('home')}
+        className="tap -ml-1.5 inline-flex items-center gap-1.5 rounded-[4px] px-1.5 text-[13px] text-ink-quiet transition-colors duration-150 hover:text-ink"
+      >
+        <ArrowLeft size={14} />
+        All tools
+      </button>
 
-        <div className="flex flex-wrap items-end justify-between gap-5">
-          <div className="min-w-0">
-            <span className="label">Tool {item}</span>
-            <h1 className="display mt-2 text-[2rem] sm:text-[2.4rem]">{title}</h1>
-            {subtitle && <p className="mt-2 truncate text-[15px] text-body">{subtitle}</p>}
+      <div className="relative mt-2.5 flex flex-wrap items-center gap-x-6 gap-y-2.5 pb-4">
+        <h1 className="display shrink-0 text-[19px] sm:text-[21px]">{title}</h1>
+
+        {typeof subtitle === 'string' ? (
+          <p className="min-w-0 truncate text-[13.5px] text-ink-quiet">{subtitle}</p>
+        ) : (
+          subtitle
+        )}
+
+        {active && (
+          <div className="ml-auto flex shrink-0 items-center">
+            <Button variant="danger" size="sm" onClick={onClear}>
+              Clear
+            </Button>
           </div>
+        )}
 
-          {active && (
-            <div className="flex items-center gap-2">
-              <span
-                className="figure rounded-control bg-violet-wash px-3.5 py-2 text-[14px] text-violet-press"
-                title="Your file is cleared from memory after ten minutes without activity"
-              >
-                Clears in {idle.label}
-              </span>
-              <button
-                type="button"
-                onClick={onClear}
-                className="tap inline-flex h-10 items-center gap-1.5 rounded-control border border-hairline px-3.5 text-[13px] font-semibold text-body transition-colors duration-200 hover:border-caution hover:text-caution"
-              >
-                <X size={14} />
-                Clear
-              </button>
-            </div>
-          )}
+        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-edge" />
+      </div>
+
+      {idle.warning && (
+        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-[5px] border border-stop bg-stop-wash px-4 py-3 text-[13.5px]">
+          <AlertTriangle size={15} className="shrink-0 text-stop" />
+          <span>
+            Wiping in <span className="data font-medium text-stop">{idle.label}</span>. Download
+            your file if you still need it.
+          </span>
+          <Button variant="solid" size="sm" className="ml-auto" onClick={idle.keepAlive}>
+            Keep working
+          </Button>
         </div>
+      )}
 
-        {idle.warning && (
-          <div className="mt-5 flex flex-wrap items-center gap-3 rounded-part border border-caution bg-caution-wash px-5 py-4 text-[14px]">
-            <AlertTriangle size={16} className="text-caution" />
-            <span>
-              Clearing in <span className="figure text-caution">{idle.label}</span>. Download your
-              file if you still need it.
-            </span>
-            <button
-              type="button"
-              onClick={idle.keepAlive}
-              className="ml-auto rounded-control bg-violet px-4 py-2 text-[13px] font-semibold text-violet-ink transition-colors duration-200 hover:bg-violet-press"
-            >
-              Keep working
-            </button>
-          </div>
-        )}
+      {busy && (
+        <div className="recess mt-4 flex items-center gap-2.5 rounded-[5px] px-4 py-3 text-[13.5px] text-ink-quiet">
+          <Loader2 size={14} className="animate-spin text-signal" />
+          {busy}
+        </div>
+      )}
 
-        {busy && (
-          <div className="card mt-5 flex items-center gap-2.5 px-5 py-4 text-[14px] text-body">
-            <Loader2 size={15} className="animate-spin text-violet" />
-            {busy}
-          </div>
-        )}
-
-        <div className="mt-6">{children}</div>
-      </Container>
-    </div>
+      <div className="mt-5">{children}</div>
+    </main>
   )
 }
 
 export function WorkspaceError({ children }: { children: ReactNode }) {
   return (
-    <div className="mb-5 flex items-start gap-2.5 rounded-part border border-caution bg-caution-wash px-5 py-4 text-[14px]">
-      <AlertTriangle size={16} className="mt-0.5 shrink-0 text-caution" />
-      <span className="text-ink">{children}</span>
+    <div className="mb-4 flex items-start gap-2.5 rounded-[5px] border border-stop bg-stop-wash px-4 py-3 text-[13.5px]">
+      <AlertTriangle size={15} className="mt-0.5 shrink-0 text-stop" />
+      <span>{children}</span>
     </div>
   )
 }
 
+/**
+ * A control on the instrument bar. Flat until you point at it, then it lifts
+ * to the table's tone — the same rule every other pressable thing follows.
+ */
 export function WorkspaceButton({
   children,
   onClick,
@@ -118,8 +111,8 @@ export function WorkspaceButton({
       disabled={disabled}
       aria-label={iconOnly ? label : undefined}
       title={iconOnly ? label : undefined}
-      className={`inline-flex h-9 items-center gap-2 rounded-control border border-transparent text-[13px] font-semibold text-body transition-colors duration-200 hover:bg-violet-wash hover:text-violet disabled:pointer-events-none disabled:opacity-35 ${
-        iconOnly ? 'w-9 justify-center' : 'px-3'
+      className={`tap inline-flex h-9 items-center gap-1.5 rounded-[4px] text-[13.5px] text-ink-quiet transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] enabled:hover:-translate-y-px enabled:hover:bg-table enabled:hover:text-ink enabled:hover:shadow-[var(--lift-1)] disabled:pointer-events-none disabled:opacity-30 ${
+        iconOnly ? 'w-9 justify-center' : 'px-2.5'
       }`}
     >
       {icon}

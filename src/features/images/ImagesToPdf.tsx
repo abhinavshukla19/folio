@@ -16,6 +16,7 @@ import {
 import { Download, RotateCw, Trash2 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Dropzone } from '../../components/Dropzone'
+import { Intake } from '../../components/Intake'
 import { Workspace, WorkspaceError } from '../Workspace'
 import {
   downloadBlob,
@@ -51,8 +52,8 @@ function Segmented<T extends string>({
 }) {
   return (
     <div className={disabled ? 'opacity-40' : undefined}>
-      <p className="label mb-2 text-[10px] text-muted">{label}</p>
-      <div className="inline-flex border border-hairline-strong">
+      <p className="meta mb-2 text-[10px] text-ink-3">{label}</p>
+      <div className="inline-flex overflow-hidden rounded-sm border border-line">
         {options.map((o) => (
           <button
             key={o.id}
@@ -60,10 +61,10 @@ function Segmented<T extends string>({
             disabled={disabled}
             onClick={() => onChange(o.id)}
             aria-pressed={value === o.id}
-            className={`border-r border-hairline-strong px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors duration-150 last:border-r-0 ${
+            className={`border-r border-line px-3 py-1.5 text-[13px] transition-colors duration-150 last:border-r-0 ${
               value === o.id
-                ? 'bg-violet text-violet-ink'
-                : 'text-body hover:bg-violet-wash hover:text-ink'
+                ? 'bg-action font-medium text-action-ink'
+                : 'text-ink-2 hover:bg-sunken hover:text-ink'
             }`}
           >
             {o.label}
@@ -169,15 +170,25 @@ export function ImagesToPdf() {
 
   if (!items.length) {
     return (
-      <Workspace item="02" title="Image to PDF" subtitle="Turn JPG, PNG and WEBP files into one PDF.">
+      <Workspace title="Image to PDF">
         {error && <WorkspaceError>{error}</WorkspaceError>}
-        <Dropzone
-          accept={ACCEPT}
-          multiple
-          onFiles={add}
-          title="Drop images here"
-          hint="JPG, PNG and WEBP. They stay on your device; nothing is sent anywhere."
-        />
+        <Intake
+          does={[
+            'Drag the images into the order you want them.',
+            'Choose the page size, orientation and margins.',
+            'Set the image quality before you download.',
+            'Name the document, then save it.',
+          ]}
+          limit="WEBP is converted on your device before it goes into the PDF, so it works here even though PDF itself cannot hold it."
+        >
+          <Dropzone
+            accept={ACCEPT}
+            multiple
+            onFiles={add}
+            title="Open images"
+            hint="Choose files, or drop them here. JPG, PNG and WEBP. They never leave your device."
+          />
+        </Intake>
       </Workspace>
     )
   }
@@ -194,7 +205,7 @@ export function ImagesToPdf() {
     >
       {error && <WorkspaceError>{error}</WorkspaceError>}
 
-      <div className="card mb-5 flex flex-wrap items-end gap-x-8 gap-y-5 p-5">
+      <div className="panel mb-5 flex flex-wrap items-end gap-x-8 gap-y-5 p-5">
         <Segmented
           label="Page size"
           value={options.size}
@@ -228,7 +239,7 @@ export function ImagesToPdf() {
         />
 
         <div>
-          <label htmlFor="quality" className="label mb-2 block text-[10px] text-muted">
+          <label htmlFor="quality" className="meta mb-2 block text-[10px] text-ink-3">
             Quality — {Math.round(options.quality * 100)}%
           </label>
           <input
@@ -239,7 +250,7 @@ export function ImagesToPdf() {
             step={0.02}
             value={options.quality}
             onChange={(e) => setOptions((o) => ({ ...o, quality: Number(e.target.value) }))}
-            className="h-1 w-40 cursor-pointer appearance-none bg-[var(--hairline-strong)]"
+            className="w-40 cursor-pointer"
           />
         </div>
 
@@ -251,7 +262,7 @@ export function ImagesToPdf() {
           type="button"
           onClick={() => void save()}
           disabled={!!busy}
-          className="inline-flex h-9 items-center gap-2 bg-violet px-5 text-[11px] font-semibold uppercase tracking-[0.07em] text-violet-ink transition-[filter] duration-150 hover:brightness-110 disabled:opacity-35"
+          className="inline-flex h-9 items-center gap-2 rounded-sm bg-action px-4 text-[13px] font-medium text-action-ink transition-colors duration-150 hover:bg-action-hover disabled:opacity-40"
         >
           <Download size={15} />
           Download PDF

@@ -34,8 +34,8 @@ export function ImageCard({ item, index, focused, onSelect, onRotate, onDelete }
         {...attributes}
         {...listeners}
         onClick={() => onSelect?.(item.id)}
-        className={`hoverable relative flex aspect-square w-full cursor-grab touch-none items-center justify-center overflow-hidden rounded-[8px] bg-page p-2 ring-1 active:cursor-grabbing ${
-          focused ? 'ring-2 ring-violet' : 'ring-[var(--hairline-strong)]'
+        className={`relative flex aspect-square w-full cursor-grab touch-none items-center justify-center overflow-hidden rounded-[8px] bg-page p-2 ring-1 active:cursor-grabbing ${
+          focused ? 'ring-2 ring-ink' : 'ring-[var(--line-strong)]'
         }`}
         style={{ boxShadow: isDragging ? 'var(--shadow-lift)' : undefined }}
       >
@@ -48,7 +48,7 @@ export function ImageCard({ item, index, focused, onSelect, onRotate, onDelete }
         />
       </div>
 
-      <span className="pointer-events-none absolute -left-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-surface px-1 text-[10px] font-bold text-muted shadow-[var(--shadow-card)] ring-1 ring-[var(--hairline)]">
+      <span className="pointer-events-none absolute -left-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-surface px-1 text-[10px] font-bold text-ink-3 shadow-[var(--shadow)] ring-1 ring-[var(--line)]">
         {index + 1}
       </span>
 
@@ -67,14 +67,14 @@ export function ImageCard({ item, index, focused, onSelect, onRotate, onDelete }
               action.run()
             }}
             onPointerDown={(e) => e.stopPropagation()}
-            className="grid h-7 w-7 place-items-center rounded-full bg-surface text-body shadow-[var(--shadow-card)] ring-1 ring-[var(--hairline)] transition-colors duration-150 hover:bg-violet hover:text-violet-ink"
+            className="grid h-7 w-7 place-items-center rounded-full bg-surface text-ink-2 shadow-[var(--shadow)] ring-1 ring-[var(--line)] transition-colors duration-150 hover:bg-action hover:text-action-ink"
           >
             {action.icon}
           </button>
         ))}
       </div>
 
-      <p className="mt-2 truncate text-center text-[11px] text-muted" title={item.file.name}>
+      <p className="mt-2 truncate text-center text-[11px] text-ink-3" title={item.file.name}>
         {item.file.name}
       </p>
     </div>

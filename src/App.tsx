@@ -1,16 +1,10 @@
-import { Faq } from './components/Faq'
-import { Footer } from './components/Footer'
-import { Hero } from './components/Hero'
-import { HowItWorks } from './components/HowItWorks'
-import { Nav } from './components/Nav'
-import { Preview } from './components/Preview'
-import { Privacy } from './components/Privacy'
-import { Tools } from './components/Tools'
-import { useHashRoute } from './lib/useHashRoute'
 import { Suspense, lazy } from 'react'
+import { Landing } from './components/Landing'
+import { Nav } from './components/Nav'
+import { useHashRoute } from './lib/useHashRoute'
 
-// pdf.js and pdf-lib are ~340kB together and nothing on the landing page
-// needs them, so each workspace loads only when its route is opened.
+// pdf.js and pdf-lib are several hundred kB together and nothing on the
+// landing page needs them, so each workspace loads only when it is opened.
 const OrganizePdf = lazy(() =>
   import('./features/organize/OrganizePdf').then((m) => ({ default: m.OrganizePdf })),
 )
@@ -23,25 +17,9 @@ const MergePdfs = lazy(() =>
 
 function RouteFallback() {
   return (
-    <div className="px-8 py-28 text-center text-[14px] text-muted" role="status">
-      Loading workspace
-    </div>
-  )
-}
-
-function Home() {
-  return (
-    <>
-      <main>
-        <Hero />
-        <Tools />
-        <Preview />
-        <HowItWorks />
-        <Privacy />
-        <Faq />
-      </main>
-      <Footer />
-    </>
+    <p className="px-6 py-24 text-center text-[13px] text-ink-3" role="status">
+      Loading…
+    </p>
   )
 }
 
@@ -51,14 +29,14 @@ export default function App() {
   return (
     <>
       <a
-        href="#tools"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-control focus:bg-violet focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-violet-ink"
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-[4px] focus:bg-ink focus:px-3.5 focus:py-2 focus:text-[13px] focus:font-semibold focus:text-table"
       >
-        Skip to tools
+        Skip to content
       </a>
       <Nav />
 
-      {route === 'home' && <Home />}
+      {route === 'home' && <Landing />}
       {route !== 'home' && (
         <Suspense fallback={<RouteFallback />}>
           {route === 'organize' && <OrganizePdf />}

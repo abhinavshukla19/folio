@@ -36,7 +36,7 @@ export function ConfirmDialog({
 
   return (
     <div
-      className="fixed inset-0 z-[80] grid place-items-center bg-[rgb(9_9_11/0.55)] p-5"
+      className="fixed inset-0 z-[80] grid place-items-center bg-[rgb(6_8_10/0.62)] p-5"
       onClick={onCancel}
       role="presentation"
     >
@@ -45,23 +45,25 @@ export function ConfirmDialog({
         aria-modal="true"
         aria-label={title}
         onClick={(e) => e.stopPropagation()}
-        className="card w-full max-w-sm p-6"
+        className="table-plane w-full max-w-sm p-6"
       >
         <div className="flex items-start gap-3">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-control bg-caution-wash text-caution">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[4px] bg-stop-wash text-stop">
             <AlertTriangle size={17} />
           </span>
           <div>
-            <h2 className="text-[17px] font-bold tracking-[-0.02em]">{title}</h2>
-            <p className="mt-2 text-[14px] leading-relaxed text-body">{body}</p>
+            <h2 className="display text-[18px]">{title}</h2>
+            <p className="mt-2 text-[14px] leading-relaxed text-ink-quiet">{body}</p>
           </div>
         </div>
 
         <div ref={confirmRef} className="mt-6 flex justify-end gap-2">
-          <Button variant="secondary" onClick={onCancel}>
+          <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button onClick={onConfirm}>{confirmLabel}</Button>
+          <Button variant="solid" onClick={onConfirm}>
+            {confirmLabel}
+          </Button>
         </div>
       </div>
     </div>

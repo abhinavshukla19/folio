@@ -26,6 +26,7 @@ import {
 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Dropzone } from '../../components/Dropzone'
+import { Intake } from '../../components/Intake'
 import { Workspace, WorkspaceButton, WorkspaceError } from '../Workspace'
 import { buildPdf, downloadBlob } from '../../lib/pdf/export'
 import {
@@ -43,6 +44,7 @@ import { PageEditor } from './PageEditor'
 import { AnnotationPreview } from './AnnotationPreview'
 import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { FileNameField, cleanFileName } from '../../components/FileNameField'
+import { Residency, formatBytes } from '../../components/Residency'
 import type { AnnotationMap } from '../../lib/pdf/annotations'
 import type { RasterMap } from '../../lib/pdf/export'
 import { planGrid } from '../../lib/layout'
@@ -373,18 +375,28 @@ export function OrganizePdf() {
 
   if (status !== 'ready') {
     return (
-      <Workspace item="01" title="Edit & rearrange pages" subtitle="Reorder, rotate, delete, or add text and signatures.">
+      <Workspace title="Edit & rearrange pages">
         {error && <WorkspaceError>{error}</WorkspaceError>}
-        <Dropzone
-          accept="application/pdf,.pdf"
-          onFiles={(files) => void open(files[0])}
-          title={status === 'loading' ? 'Reading the document' : 'Drop a PDF here'}
-          hint={
-            status === 'loading'
-              ? 'Nothing is being uploaded — this is your own machine working.'
-              : 'It stays on your device. Nothing is sent anywhere.'
-          }
-        />
+        <Intake
+          does={[
+            'Drag pages into a new order.',
+            'Rotate, duplicate or delete any page.',
+            'Add text, cover something up, or sign it.',
+            'Download the whole file, or only the pages you picked.',
+          ]}
+          limit="Password-protected PDFs cannot be opened. Remove the password in your PDF reader first."
+        >
+          <Dropzone
+            accept="application/pdf,.pdf"
+            onFiles={(files) => void open(files[0])}
+            title={status === 'loading' ? 'Reading the document' : 'Open a PDF'}
+            hint={
+              status === 'loading'
+                ? 'This is your own machine working. Nothing is being uploaded.'
+                : 'Choose a file, or drop one here. It never leaves your device.'
+            }
+          />
+        </Intake>
       </Workspace>
     )
   }
@@ -413,17 +425,22 @@ export function OrganizePdf() {
 
   return (
     <Workspace
-      item="01"
-     
       title="Edit & rearrange pages"
-      subtitle={`${doc?.name ?? ''} · ${pages.length} page${pages.length === 1 ? '' : 's'}`}
+      subtitle={
+        <Residency
+          name={doc?.name ?? 'document.pdf'}
+          detail={`${pages.length} page${pages.length === 1 ? '' : 's'} · ${formatBytes(
+            doc?.bytes.byteLength ?? 0,
+          )} in this tab`}
+        />
+      }
       active
       onClear={() => setConfirming('clear')}
       busy={busy}
     >
       {error && <WorkspaceError>{error}</WorkspaceError>}
 
-      <div className="card sticky top-[72px] z-30 mb-5 flex flex-wrap items-center gap-1.5 p-2">
+      <div className="sticky top-2 z-30 mb-5 flex flex-wrap items-center gap-1 rounded-[6px] bg-table p-1.5 shadow-[var(--lift-2),var(--rim)]">
         <WorkspaceButton
           onClick={() => focusPage && setEditingPageId(focusPage.id)}
           disabled={!focusPage}
@@ -432,7 +449,7 @@ export function OrganizePdf() {
           Edit page {focusPage ? focusIndex + 1 : ''}
         </WorkspaceButton>
 
-        <span className="mx-1 h-5 w-px bg-[var(--hairline)]" />
+        <span aria-hidden="true" className="mx-1.5 h-5 w-px bg-edge" />
 
         <WorkspaceButton onClick={() => rotate(-1)} disabled={!selectionSize} icon={<RotateCcw size={15} />}>
           Rotate left
@@ -454,7 +471,7 @@ export function OrganizePdf() {
           {selectionSize ? `Download ${selectionSize} selected` : 'Download selected'}
         </WorkspaceButton>
 
-        <span className="mx-1 h-5 w-px bg-[var(--hairline)]" />
+        <span aria-hidden="true" className="mx-1.5 h-5 w-px bg-edge" />
 
         <WorkspaceButton onClick={undo} disabled={!hist.past.length} icon={<Undo2 size={15} />} iconOnly label="Undo" />
         <WorkspaceButton onClick={redo} disabled={!hist.future.length} icon={<Redo2 size={15} />} iconOnly label="Redo" />
@@ -464,14 +481,14 @@ export function OrganizePdf() {
           <button
             type="button"
             onClick={selectionSize ? () => setSelected(new Set()) : selectAll}
-            className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.07em] text-body transition-colors duration-150 hover:bg-violet-wash hover:text-ink"
+            className="tap rounded-[4px] px-2.5 py-1.5 text-[13.5px] text-ink-quiet transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-table hover:text-ink hover:shadow-[var(--lift-1)]"
           >
             {selectionSize ? `${selectionSize} selected — clear` : 'Select all'}
           </button>
           <button
             type="button"
             onClick={() => setConfirming('reset')}
-            className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.07em] text-body transition-colors duration-150 hover:bg-violet-wash hover:text-ink"
+            className="tap rounded-[4px] px-2.5 py-1.5 text-[13.5px] text-ink-quiet transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:bg-table hover:text-ink hover:shadow-[var(--lift-1)]"
           >
             Reset
           </button>
@@ -479,7 +496,7 @@ export function OrganizePdf() {
             type="button"
             onClick={() => void save(false)}
             disabled={!pages.length || !!busy}
-            className="inline-flex h-8 items-center gap-2 bg-violet px-4 text-[11px] font-semibold uppercase tracking-[0.07em] text-violet-ink transition-[filter] duration-150 hover:brightness-110 disabled:opacity-35"
+            className="tap inline-flex h-9 items-center gap-2 rounded-[4px] bg-ink px-4 text-[13.5px] font-semibold tracking-[-0.005em] text-table shadow-[var(--lift-1)] transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] enabled:hover:-translate-y-px enabled:hover:shadow-[var(--lift-2)] disabled:pointer-events-none disabled:opacity-40"
           >
             <Download size={15} />
             Download all
@@ -490,7 +507,7 @@ export function OrganizePdf() {
       <>
         <div className={plan.focusPanel ? 'grid gap-5 lg:grid-cols-[340px_minmax(0,1fr)]' : ''}>
           {plan.focusPanel && (
-            <div className="lg:sticky lg:top-[88px] lg:self-start">
+            <div className="lg:sticky lg:top-20 lg:self-start">
               <FocusPane
                 label={focusPage ? `Page ${focusIndex + 1} of ${pages.length}` : 'No page selected'}
                 caption={doc?.name}
@@ -554,7 +571,7 @@ export function OrganizePdf() {
 
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
             <SortableContext items={pages.map((p) => p.id)} strategy={rectSortingStrategy}>
-              <div className={`grid gap-4 ${plan.columns} ${plan.maxWidth}`}>
+              <div className={`table-plane grid gap-4 p-4 sm:gap-5 sm:p-5 ${plan.columns} ${plan.maxWidth}`}>
                 {pages.map((page, i) => {
                   const size = doc?.sizes[page.source]
                   return (
@@ -589,8 +606,8 @@ export function OrganizePdf() {
       </>
 
       {!pages.length && (
-        <p className="py-16 text-center text-[14px] text-body">
-          Every page was deleted. Use Reset to bring them back.
+        <p className="recess rounded-[6px] py-16 text-center text-[14px] text-ink-quiet">
+          Every page has been deleted. Use Reset to bring them all back.
         </p>
       )}
 
