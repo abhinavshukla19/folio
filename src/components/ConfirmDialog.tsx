@@ -36,7 +36,7 @@ export function ConfirmDialog({
 
   return (
     <div
-      className="fixed inset-0 z-[80] grid place-items-center bg-[rgb(6_8_10/0.62)] p-5"
+      className="fixed inset-0 z-[80] grid place-items-center bg-[rgb(6_8_10/0.62)] p-3 sm:p-5"
       onClick={onCancel}
       role="presentation"
     >
@@ -45,9 +45,9 @@ export function ConfirmDialog({
         aria-modal="true"
         aria-label={title}
         onClick={(e) => e.stopPropagation()}
-        className="table-plane w-full max-w-sm p-6"
+        className="table-plane flex max-h-[calc(100dvh-1.5rem)] w-full max-w-sm flex-col p-5 sm:max-h-[calc(100dvh-2.5rem)] sm:p-6"
       >
-        <div className="flex items-start gap-3">
+        <div className="flex min-h-0 shrink items-start gap-3 overflow-y-auto">
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[4px] bg-stop-wash text-stop">
             <AlertTriangle size={17} />
           </span>
@@ -57,7 +57,7 @@ export function ConfirmDialog({
           </div>
         </div>
 
-        <div ref={confirmRef} className="mt-6 flex justify-end gap-2">
+        <div ref={confirmRef} className="mt-5 flex shrink-0 flex-wrap justify-end gap-2 sm:mt-6">
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>

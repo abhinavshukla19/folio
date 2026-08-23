@@ -389,6 +389,91 @@
   }
 }
 
+/* -------------------------------------------------------------
+   The inspector as a sheet you can put away.
+
+   On a phone the controls are a <details>, so pulling them down costs
+   no state at all -- the browser owns it. From lg the handle disappears
+   and the body is forced open, which is why it is a real declaration
+   and not just a missing `open` attribute: the sidebar must never
+   depend on whatever the sheet was last left as.
+   ------------------------------------------------------------- */
+.sheet-handle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  list-style: none;
+  padding-bottom: 0.75rem;
+}
+.sheet-handle::-webkit-details-marker {
+  display: none;
+}
+.sheet-chevron {
+  transition: transform 0.2s var(--ease-out);
+}
+.sheet-disclosure[open] .sheet-chevron {
+  transform: rotate(180deg);
+}
+
+@media (min-width: 1024px) {
+  /* The handle carries what is selected and what you can do to it, so it
+     stays. Only the folding goes away: there is nothing to fold into on a
+     surface this size, and the body is forced open regardless. */
+  .sheet-handle {
+    cursor: default;
+    padding-bottom: 1rem;
+  }
+  .sheet-chevron {
+    display: none;
+  }
+  .sheet-disclosure > .sheet-body {
+    display: block !important;
+  }
+}
+
+/* -------------------------------------------------------------
+   A phone on its side: plenty of width, almost no height. Width-based
+   breakpoints read that as a tablet and hand the chrome its full size,
+   which leaves the page a sliver. These rules key off height instead.
+   ------------------------------------------------------------- */
+@media (max-height: 560px) {
+  /* words on the drawing tools cost a whole toolbar row here */
+  .sm-label {
+    display: none;
+  }
+  /* so does anything that only repeats a control already on the bar */
+  .short-hide {
+    display: none;
+  }
+}
+
+@media (max-height: 560px) and (min-width: 620px) {
+  /* Put the inspector beside the page rather than under it: on a landscape
+     screen the spare room is horizontal. */
+  .editor-body {
+    flex-direction: row;
+  }
+  .editor-pane {
+    max-height: none;
+    width: 17.5rem;
+    border-top: 0;
+    border-left: 1px solid var(--edge);
+    box-shadow: none;
+  }
+  .editor-pane .sheet-handle {
+    display: flex;
+  }
+}
+
+/* Keyboard and mouse hints. They are not wrong on a touch device so much as
+   useless, and the room they take is room the page could have had. */
+@media (pointer: coarse) {
+  .fine-only {
+    display: none;
+  }
+}
+
 @media (pointer: coarse) {
   .tap {
     min-height: 44px;

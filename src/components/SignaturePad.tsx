@@ -113,9 +113,9 @@ export function SignaturePad({
   }, [onDone])
 
   return (
-    <div className="fixed inset-0 z-[70] grid place-items-center bg-[rgb(6_8_10/0.62)] p-5">
-      <div className="table-plane w-full max-w-lg overflow-hidden">
-        <div className="border-b border-edge px-5 py-4">
+    <div className="fixed inset-0 z-[70] grid place-items-center bg-[rgb(6_8_10/0.62)] p-3 sm:p-5">
+      <div className="table-plane flex max-h-[calc(100dvh-1.5rem)] w-full max-w-lg flex-col overflow-hidden sm:max-h-[calc(100dvh-2.5rem)]">
+        <div className="shrink-0 border-b border-edge px-5 py-3 sm:py-4">
           <h2 className="display text-[18px]">Draw your signature</h2>
           <p className="mt-1 text-[13.5px] text-ink-quiet">
             Use a mouse, pen or finger. It is cropped to the ink and stays on your device.
@@ -128,22 +128,22 @@ export function SignaturePad({
           onPointerMove={move}
           onPointerUp={end}
           onPointerLeave={end}
-          className="h-52 w-full touch-none bg-sheet"
+          className="h-[clamp(112px,26dvh,208px)] w-full shrink-0 touch-none bg-sheet"
           style={{ cursor: 'crosshair' }}
         />
 
-        <div className="flex flex-wrap items-center gap-4 border-t border-edge px-5 py-3">
-          <label className="flex items-center gap-2 text-[13px] text-ink-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-t border-edge px-5 py-2.5 sm:py-3">
+          <label className="flex items-center gap-2 text-[13px] text-ink-quiet">
             Ink
             <input
               type="color"
               value={colour}
               onChange={(e) => setColour(e.target.value)}
-              className="h-7 w-9 cursor-pointer rounded border border-line bg-transparent"
+              className="h-8 w-10 cursor-pointer rounded-[4px] border border-edge bg-transparent"
               aria-label="Ink colour"
             />
           </label>
-          <label className="flex items-center gap-2 text-[13px] text-ink-2">
+          <label className="flex items-center gap-2 text-[13px] text-ink-quiet">
             Weight
             <input
               type="range"
@@ -159,13 +159,13 @@ export function SignaturePad({
           <button
             type="button"
             onClick={clear}
-            className="ml-auto text-[13px] font-semibold text-ink-2 transition-colors duration-200 hover:text-danger"
+            className="tap ml-auto inline-flex items-center rounded-[4px] px-2 text-[13px] font-semibold text-ink-quiet transition-colors duration-200 hover:text-stop"
           >
             Clear
           </button>
         </div>
 
-        <div className="flex justify-end gap-2 border-t border-edge px-5 py-4">
+        <div className="flex shrink-0 justify-end gap-2 border-t border-edge px-5 py-3 sm:py-4">
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>

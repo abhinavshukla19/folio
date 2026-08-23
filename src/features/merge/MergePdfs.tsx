@@ -59,22 +59,22 @@ function SortableDoc({
       style={{
         transform: CSS.Transform.toString(transform),
         transition,
-        boxShadow: isDragging ? 'var(--shadow-lift)' : undefined,
+        boxShadow: isDragging ? 'var(--lift-2)' : undefined,
       }}
-      className={`panel group relative flex items-center gap-4 p-3 ${isDragging ? 'z-20' : ''}`}
+      className={`group relative flex min-w-0 items-center gap-3 rounded-[5px] bg-table p-2.5 shadow-[var(--lift-1),var(--rim)] sm:gap-4 sm:p-3 ${isDragging ? 'z-20' : ''}`}
     >
       <span
         {...attributes}
         {...listeners}
         title="Drag to reorder"
-        className="grid h-10 w-6 shrink-0 cursor-grab touch-none place-items-center text-ink-3 active:cursor-grabbing"
+        className="grid h-10 w-6 shrink-0 cursor-grab touch-none place-items-center text-ink-faint active:cursor-grabbing"
       >
         <GripVertical size={16} />
       </span>
 
-      <span className="mono w-6 shrink-0 text-[13px] text-ink">{index + 1}</span>
+      <span className="data w-5 shrink-0 text-[12.5px] font-medium text-ink-faint">{index + 1}</span>
 
-      <span className="h-16 w-12 shrink-0 overflow-hidden rounded-[4px] bg-page ring-1 ring-[var(--line-strong)]">
+      <span className="h-12 w-9 shrink-0 overflow-hidden rounded-[3px] bg-sheet shadow-[var(--lift-1)] sm:h-16 sm:w-12">
         {doc.thumb && (
           <img src={doc.thumb} alt="" className="h-full w-full object-contain" draggable={false} />
         )}
@@ -84,7 +84,7 @@ function SortableDoc({
         <span className="block truncate text-[14px] font-semibold" title={doc.name}>
           {doc.name}
         </span>
-        <span className="mt-0.5 block text-[12px] text-ink-3">
+        <span className="data mt-0.5 block text-[12px] text-ink-quiet">
           {doc.pageCount} page{doc.pageCount === 1 ? '' : 's'}
         </span>
       </span>
@@ -94,7 +94,7 @@ function SortableDoc({
         aria-label={`Remove ${doc.name}`}
         title="Remove"
         onClick={() => onRemove(doc.id)}
-        className="on-hover grid h-9 w-9 shrink-0 place-items-center rounded-sm text-ink-2 transition-colors duration-200 hover:bg-danger-bg hover:text-danger"
+        className="tap on-hover grid h-9 w-9 shrink-0 place-items-center rounded-[4px] text-ink-quiet transition-colors duration-200 hover:bg-stop-wash hover:text-stop"
       >
         <Trash2 size={15} />
       </button>

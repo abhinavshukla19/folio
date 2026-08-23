@@ -3,6 +3,7 @@ import {
   AlignLeft,
   AlignRight,
   Bold,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Copy,
@@ -491,12 +492,12 @@ export function PageEditor({
   /* ── render ──────────────────────────────────────────────── */
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-bg">
-      <div className="flex flex-wrap items-center gap-3 border-b border-line px-4 py-3">
+    <div className="fixed inset-0 z-[60] flex flex-col bg-room">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-2 border-b border-edge px-3 py-2.5 sm:gap-x-3 sm:px-4 sm:py-3">
         <button
           type="button"
           onClick={onClose}
-          className="tap inline-flex h-10 items-center gap-2 rounded-sm border border-line px-3.5 text-[13px] font-semibold text-ink-2 transition-colors duration-200 hover:border-ink hover:text-ink"
+          className="tap inline-flex h-9 items-center gap-2 rounded-[4px] bg-table px-3.5 text-[13.5px] font-semibold text-ink shadow-[var(--lift-1),var(--rim)] transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px"
         >
           <X size={15} />
           Done
@@ -506,13 +507,13 @@ export function PageEditor({
           <IconBtn label="Previous page" onClick={onPrev} disabled={!onPrev}>
             <ChevronLeft size={17} />
           </IconBtn>
-          <span className="min-w-[7rem] text-center text-[13px] font-semibold">{pageLabel}</span>
+          <span className="data min-w-[5.5rem] text-center text-[12.5px] font-medium sm:text-[13px] lg:min-w-[7rem]">{pageLabel}</span>
           <IconBtn label="Next page" onClick={onNext} disabled={!onNext}>
             <ChevronRight size={17} />
           </IconBtn>
         </div>
 
-        <div className="flex items-center gap-1 rounded-sm border border-line px-1">
+        <div className="flex items-center gap-0.5 rounded-[4px] border border-edge px-0.5">
           <IconBtn label="Zoom out" onClick={() => setZoom((z) => Math.max(ZOOM_MIN, z / 1.25))}>
             <Minus size={15} />
           </IconBtn>
@@ -520,34 +521,36 @@ export function PageEditor({
             type="button"
             onClick={() => setZoom(1)}
             title="Fit the page (Ctrl+0)"
-            className="tap min-w-[3.5rem] text-center text-[13px] font-semibold text-ink-2 transition-colors duration-200 hover:text-ink"
+            className="data tap min-w-[2.5rem] text-center text-[12.5px] font-medium text-ink-quiet transition-colors duration-200 hover:text-ink sm:min-w-[3.25rem]"
           >
             {Math.round(zoom * 100)}%
           </button>
           <IconBtn label="Zoom in" onClick={() => setZoom((z) => Math.min(ZOOM_MAX, z * 1.25))}>
             <Plus size={15} />
           </IconBtn>
-          <IconBtn label="Fit page" onClick={() => setZoom(1)}>
-            <Maximize2 size={14} />
-          </IconBtn>
+          <span className="short-hide hidden sm:contents">
+            <IconBtn label="Fit page" onClick={() => setZoom(1)}>
+              <Maximize2 size={14} />
+            </IconBtn>
+          </span>
         </div>
 
-        <div className="ml-auto flex flex-wrap items-center gap-2">
+        <div className="ml-auto flex items-center gap-1 sm:gap-2">
           <Button variant="outline" size="md" onClick={addText}>
             <Type size={15} />
-            Text
+            <span className="sm-label hidden sm:inline">Text</span>
           </Button>
           <Button variant="outline" size="md" onClick={() => void addCover()}>
             <Square size={15} />
-            Cover
+            <span className="sm-label hidden sm:inline">Cover</span>
           </Button>
           <Button variant="outline" size="md" onClick={() => setSigning(true)}>
             <PenLine size={15} />
-            Signature
+            <span className="sm-label hidden sm:inline">Signature</span>
           </Button>
           <Button variant="outline" size="md" onClick={() => fileInput.current?.click()}>
             <Upload size={15} />
-            Image
+            <span className="sm-label hidden sm:inline">Image</span>
           </Button>
           <input
             ref={fileInput}
@@ -571,10 +574,10 @@ export function PageEditor({
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+      <div className="editor-body flex min-h-0 flex-1 flex-col lg:flex-row">
         <div
           ref={scroller}
-          className="grid min-h-0 flex-1 place-items-center overflow-auto bg-sunken p-6"
+          className="recess grid min-h-0 flex-1 place-items-center overflow-auto p-4 sm:p-6"
         >
           <div
             ref={surface}
@@ -697,22 +700,20 @@ export function PageEditor({
           </div>
         </div>
 
-        <aside className="w-full shrink-0 overflow-y-auto border-t border-line p-5 lg:w-[300px] lg:border-l lg:border-t-0">
-          {!selected && (
-            <p className="text-[14px] leading-relaxed text-ink-2">
-              Add text, a cover box, your signature or an image. Click anything on the page to
-              select it, drag to move, grab the round handle above it to rotate, and pull the
-              corner dot to resize.
-            </p>
-          )}
-
+        <aside className="editor-pane max-h-[42vh] w-full shrink-0 overflow-y-auto border-t border-edge bg-table px-4 py-3 shadow-[var(--lift-2)] sm:p-5 lg:max-h-none lg:w-[310px] lg:border-l lg:border-t-0 lg:shadow-none">
           {selected && (
-            <div className="space-y-5">
-              <div className="flex items-center justify-between">
-                <span className="meta">
-                  {selected.kind === 'text' ? 'Text' : selected.kind === 'box' ? 'Cover' : 'Image'}
-                </span>
-                <div className="flex gap-1">
+            <details open className="sheet-disclosure">
+              {/* The handle stays put when the rest is folded away, so what is
+                  selected -- and the two things you are most likely to do to it
+                  -- are still to hand while you look at the page. */}
+              <summary className="sheet-handle">
+                <span className="meta">{selected.kind === 'text' ? 'Text' : selected.kind === 'box' ? 'Cover' : 'Image'}</span>
+                {/* preventDefault so acting on the selection does not also
+                    fold the sheet underneath your finger */}
+                <span
+                  className="ml-auto flex items-center gap-1"
+                  onClick={(e) => e.preventDefault()}
+                >
                   <IconBtn label="Duplicate" onClick={() => duplicate(selected.id)}>
                     <Copy size={15} />
                   </IconBtn>
@@ -721,12 +722,23 @@ export function PageEditor({
                     aria-label="Delete"
                     title="Delete"
                     onClick={() => remove(selected.id)}
-                    className="grid h-9 w-9 place-items-center rounded-sm text-ink-2 transition-colors duration-200 hover:bg-danger-bg hover:text-danger"
+                    className="tap grid h-9 w-9 shrink-0 place-items-center rounded-[4px] text-ink-quiet transition-colors duration-200 hover:bg-stop-wash hover:text-stop"
                   >
                     <Trash2 size={15} />
                   </button>
-                </div>
-              </div>
+
+                  {/* Deleting and dismissing sit either side of a divider, so
+                      the destructive one is never the neighbouring target. */}
+                  <span aria-hidden="true" className="mx-1 h-5 w-px bg-edge" />
+
+                  <IconBtn label="Close" onClick={() => setSelectedId(null)}>
+                    <X size={15} />
+                  </IconBtn>
+                </span>
+                <ChevronDown size={16} className="sheet-chevron shrink-0 text-ink-faint" />
+              </summary>
+
+              <div className="sheet-body space-y-5">
 
               {text && (
                 <>
@@ -736,7 +748,7 @@ export function PageEditor({
                       value={text.text}
                       onChange={(e) => update(text.id, { text: e.target.value })}
                       rows={3}
-                      className="mt-2 w-full resize-y rounded-sm border border-line bg-surface px-3 py-2 text-[14px] outline-none focus:border-ink"
+                      className="recess mt-2 w-full resize-y rounded-[4px] px-3 py-2 text-[14px] outline-none focus:shadow-[var(--cut-deep),0_0_0_2px_var(--ink)]"
                     />
                   </label>
 
@@ -746,7 +758,7 @@ export function PageEditor({
                       <select
                         value={text.fontId}
                         onChange={(e) => update(text.id, { fontId: e.target.value as FontId })}
-                        className="mt-2 w-full rounded-sm border border-line bg-surface px-2 py-2 text-[14px] outline-none focus:border-ink"
+                        className="recess mt-2 w-full rounded-[4px] px-2 py-2 text-[14px] outline-none focus:shadow-[var(--cut-deep),0_0_0_2px_var(--ink)]"
                       >
                         {(Object.keys(FONT_LABELS) as FontId[]).map((f) => (
                           <option key={f} value={f}>
@@ -763,7 +775,7 @@ export function PageEditor({
                         max={400}
                         value={text.size}
                         onChange={(e) => update(text.id, { size: Number(e.target.value) || 12 })}
-                        className="mt-2 w-full rounded-sm border border-line bg-surface px-3 py-2 text-[14px] outline-none focus:border-ink"
+                        className="recess mt-2 w-full rounded-[4px] px-3 py-2 text-[14px] outline-none focus:shadow-[var(--cut-deep),0_0_0_2px_var(--ink)]"
                       />
                     </label>
                   </div>
@@ -855,16 +867,17 @@ export function PageEditor({
                 />
               </label>
 
-              <p className="text-[12px] leading-relaxed text-ink-3">
-                Arrow keys nudge, Shift+arrows move further. Ctrl +/− zooms, Ctrl 0 fits.
-                Double-click text to edit it on the page.
-              </p>
-            </div>
+                <p className="fine-only text-[12px] leading-relaxed text-ink-faint">
+                  Arrow keys nudge, Shift+arrows move further. Ctrl +/− zooms, Ctrl 0 fits.
+                  Double-click text to edit it on the page.
+                </p>
+              </div>
+            </details>
           )}
 
           {/* Export option, kept out of the way of the drawing tools. */}
-          <details className="mt-8 border-t border-line pt-4">
-            <summary className="tap flex cursor-pointer items-center gap-2 text-[13px] font-semibold text-ink-2">
+          <details className="mt-4 border-t border-edge pt-3 lg:mt-8 lg:pt-4">
+            <summary className="tap flex cursor-pointer items-center gap-2 text-[13px] font-semibold text-ink-quiet">
               <input
                 type="checkbox"
                 checked={flattened}
@@ -874,7 +887,7 @@ export function PageEditor({
               />
               Flatten this page on export
             </summary>
-            <p className="mt-2 text-[12px] leading-relaxed text-ink-3">
+            <p className="mt-2 text-[12px] leading-relaxed text-ink-faint">
               A cover box hides text but leaves it in the file, still selectable. Flattening
               replaces the page with a picture of it, so covered content is genuinely gone. Your
               added text stays sharp. The page stops being searchable and the file grows.
@@ -914,7 +927,7 @@ function IconBtn({
       disabled={disabled}
       aria-label={label}
       title={label}
-      className="tap grid h-9 w-9 place-items-center rounded-sm text-ink-2 transition-colors duration-200 hover:bg-sunken hover:text-ink disabled:opacity-30"
+      className="tap grid h-9 w-9 shrink-0 place-items-center rounded-[4px] text-ink-quiet transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] enabled:hover:-translate-y-px enabled:hover:bg-table enabled:hover:text-ink disabled:opacity-30"
     >
       {children}
     </button>
@@ -939,10 +952,8 @@ function Toggle({
       aria-pressed={on}
       aria-label={label}
       title={label}
-      className={`grid h-9 w-9 place-items-center rounded-sm border transition-colors duration-200 ${
-        on
-          ? 'border-ink bg-action text-action-ink'
-          : 'border-line text-ink-2 hover:border-ink hover:text-ink'
+      className={`tap grid h-9 w-9 shrink-0 place-items-center rounded-[4px] border transition-colors duration-200 ${
+        on ? 'border-ink bg-ink text-table' : 'border-edge text-ink-quiet hover:border-ink hover:text-ink'
       }`}
     >
       {children}
