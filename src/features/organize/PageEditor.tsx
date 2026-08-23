@@ -492,7 +492,7 @@ export function PageEditor({
   /* ── render ──────────────────────────────────────────────── */
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-room">
+    <div className="safe-top safe-bottom safe-x fixed inset-0 z-[60] flex flex-col bg-room">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-2 border-b border-edge px-3 py-2.5 sm:gap-x-3 sm:px-4 sm:py-3">
         <button
           type="button"

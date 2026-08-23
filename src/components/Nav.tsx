@@ -48,7 +48,7 @@ export function Nav() {
   const { theme, toggle } = useTheme()
 
   return (
-    <header>
+    <header className="safe-top safe-x">
       <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-5 sm:px-8">
         <a href="#" className="rounded-[3px] text-ink" aria-label="Folio — home">
           <Logo size={20} />
