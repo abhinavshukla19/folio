@@ -310,7 +310,7 @@ export function OrganizePdf() {
         setBusy(onlySelected ? 'Building selection…' : 'Building PDF…')
         const blob = await buildPdf(doc.bytes, chosen, annotations, rasters)
         const base = cleanFileName(outName)
-        downloadBlob(blob, onlySelected ? `${base}-selected.pdf` : `${base}.pdf`)
+        await downloadBlob(blob, onlySelected ? `${base}-selected.pdf` : `${base}.pdf`)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Export failed.')
       } finally {

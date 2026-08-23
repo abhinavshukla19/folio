@@ -32,6 +32,35 @@ npx tsc -b        # typecheck
 npx oxlint src/   # lint
 ```
 
+## Installing it
+
+The web build is a PWA: a service worker precaches the whole bundle, including
+the pdf.js worker, so an installed copy opens and works with no network at all.
+Install it from the browser — "Add to Home screen" on a phone, or the install
+button in Chrome's address bar on a desktop. Pushing to `master` deploys it to
+GitHub Pages, which is why `base` is `/folio/`.
+
+There is also an Android wrapper, for a real installable `.apk` that carries
+its own copy of the site:
+
+```
+npm run app:sync                        # build in capacitor mode, copy into android/
+cd android && ./gradlew assembleDebug   # apk in app/build/outputs/apk/debug/
+```
+
+Capacitor serves the bundled assets from `https://localhost` inside the app
+rather than from `file://`. That is not cosmetic: pdf.js runs its parser in a
+Web Worker, and a worker constructed from a `file://` origin is blocked, so the
+app would render nothing. A real origin keeps workers, blob URLs and object
+URLs behaving exactly as they do in a tab.
+
+The one thing that genuinely differs is saving. A browser download is a blob
+handed to the browser's download manager, and inside an app there is no such
+thing — an `<a download>` click is silently ignored. On Android the finished
+file is written to the app's cache and passed to the system share sheet
+instead, which is where "save to Files", Drive and the rest live. That branch
+is the whole of `downloadBlob`; everything upstream of it is shared.
+
 ## How it works
 
 - `pdf.js` rasterises pages for display, `pdf-lib` assembles the output, and

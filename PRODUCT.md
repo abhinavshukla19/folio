@@ -5,7 +5,15 @@ Durable decisions about what Folio is, so they do not get re-litigated later.
 ## Platform
 
 Web. Static SPA on Vite + React 19 + TypeScript + Tailwind 4. No backend, no
-server runtime. Deploy target undecided; Vercel assumed for now.
+server runtime. Deployed to GitHub Pages from `master`.
+
+Installable two ways, both carrying the same bundle. The web build is a PWA
+whose service worker precaches everything, including the pdf.js worker, so an
+installed copy runs with no network. An Android wrapper (Capacitor) puts that
+same bundle in a real `.apk`, served from `https://localhost` inside the app
+rather than `file://` so the pdf.js worker still starts. The only branch
+between them is saving: a browser hands the blob to its download manager,
+whereas the app writes the file and passes it to the system share sheet.
 
 ## Who it is for
 

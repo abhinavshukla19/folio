@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core'
 import { PDFDocument, degrees } from 'pdf-lib'
 import { drawAnnotations, embedFontsFor, type AnnotationMap } from './annotations'
 
@@ -215,7 +216,54 @@ export async function imagesToPdf(
 
 /* ── Saving ─────────────────────────────────────────────────── */
 
-export function downloadBlob(blob: Blob, filename: string) {
+/** Base64 without the `data:` prefix, which is what the file bridge wants. */
+function toBase64(blob: Blob) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onerror = () => reject(new Error('Could not read the finished file.'))
+    reader.onload = () => {
+      const result = String(reader.result)
+      const comma = result.indexOf(',')
+      resolve(comma === -1 ? result : result.slice(comma + 1))
+    }
+    reader.readAsDataURL(blob)
+  })
+}
+
+/**
+ * Inside the Android app there is no browser download manager to hand a blob
+ * to: an `<a download>` click is silently ignored. The file is written to the
+ * app's own cache instead and handed to the system sheet, which is where
+ * "save to Files", Drive and everything else lives.
+ *
+ * Both plugins are imported lazily so the web bundle never pays for them.
+ */
+async function saveOnDevice(blob: Blob, filename: string) {
+  const [{ Filesystem, Directory }, { Share }] = await Promise.all([
+    import('@capacitor/filesystem'),
+    import('@capacitor/share'),
+  ])
+
+  const { uri } = await Filesystem.writeFile({
+    path: filename,
+    data: await toBase64(blob),
+    directory: Directory.Cache,
+  })
+
+  await Share.share({ title: filename, url: uri })
+}
+
+/**
+ * Hands the finished file to whatever can save it. On the web that is the
+ * browser's own download, triggered synchronously so it stays inside the
+ * click that asked for it.
+ */
+export async function downloadBlob(blob: Blob, filename: string) {
+  if (Capacitor.isNativePlatform()) {
+    await saveOnDevice(blob, filename)
+    return
+  }
+
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url

@@ -152,7 +152,7 @@ export function ImagesToPdf() {
         options,
         (done, total) => setBusy(`Adding image ${done} of ${total}…`),
       )
-      downloadBlob(blob, `${cleanFileName(outName)}.pdf`)
+      await downloadBlob(blob, `${cleanFileName(outName)}.pdf`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not build the PDF.')
     } finally {

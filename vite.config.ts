@@ -37,12 +37,20 @@ const CSP = [
  */
 const BASE = process.env.FOLIO_BASE ?? '/folio/'
 
-export default defineConfig(({ command }) => ({
-  base: BASE,
+export default defineConfig(({ command, mode }) => {
+  // `vite build --mode capacitor` produces the bundle that ships inside the
+  // Android app: relative URLs, because Capacitor serves it from the root of
+  // its own origin, and no service worker, because there is no network to be
+  // offline from -- the assets are already on the device.
+  const forApp = mode === 'capacitor'
+
+  return {
+  base: forApp ? './' : BASE,
   plugins: [
     react(),
     tailwindcss(),
     VitePWA({
+      disable: forApp,
       registerType: 'autoUpdate',
       // A separate file, not an inline script: the CSP forbids inline script.
       injectRegister: 'script',
@@ -89,4 +97,5 @@ export default defineConfig(({ command }) => ({
   // No `server.host` on purpose: Vite's default is loopback only, so the dev
   // server is not reachable from other devices. Run `vite --host` for a one-off
   // if you ever want it on the network.
-}))
+  }
+})

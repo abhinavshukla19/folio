@@ -205,7 +205,7 @@ export function MergePdfs() {
         docs.map((d) => ({ name: d.name, bytes: d.bytes })),
         (done, total) => setBusy(`Adding document ${done} of ${total}…`),
       )
-      downloadBlob(blob, `${cleanFileName(outName)}.pdf`)
+      await downloadBlob(blob, `${cleanFileName(outName)}.pdf`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not merge these files.')
     } finally {
