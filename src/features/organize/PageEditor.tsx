@@ -110,6 +110,80 @@ export function PageEditor({
   const drag = useRef<Drag | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
   const [sharp, setSharp] = useState<string | null>(null)
+
+  /* ── pinch to zoom ─────────────────────────────────────── */
+
+  // The +/- pair is fine under a mouse and awkward under a thumb, so two
+  // fingers scale the page directly. One finger is deliberately untouched:
+  // it still pans the view and drags whatever is selected.
+  const zoomRef = useRef(zoom)
+  useEffect(() => {
+    zoomRef.current = zoom
+  }, [zoom])
+
+  // Where the fingers were, so the point between them can be held still once
+  // the page has been laid out at its new size.
+  const pinch = useRef<{ x: number; y: number; from: number } | null>(null)
+
+  useEffect(() => {
+    const el = scroller.current
+    if (!el) return
+
+    let startGap = 0
+    let startZoom = 1
+
+    const gap = (t: TouchList) =>
+      Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY)
+
+    const begin = (e: TouchEvent) => {
+      if (e.touches.length !== 2) return
+      startGap = gap(e.touches)
+      startZoom = zoomRef.current
+    }
+
+    const move = (e: TouchEvent) => {
+      if (e.touches.length !== 2 || !startGap) return
+      // Without this the WebView pans and zooms the whole page underneath us.
+      e.preventDefault()
+      const scale = gap(e.touches) / startGap
+      const next = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, startZoom * scale))
+      const box = el.getBoundingClientRect()
+      pinch.current = {
+        x: (e.touches[0].clientX + e.touches[1].clientX) / 2 - box.left,
+        y: (e.touches[0].clientY + e.touches[1].clientY) / 2 - box.top,
+        from: zoomRef.current,
+      }
+      setZoom(next)
+    }
+
+    const end = (e: TouchEvent) => {
+      if (e.touches.length < 2) startGap = 0
+    }
+
+    el.addEventListener('touchstart', begin, { passive: true })
+    el.addEventListener('touchmove', move, { passive: false })
+    el.addEventListener('touchend', end)
+    el.addEventListener('touchcancel', end)
+    return () => {
+      el.removeEventListener('touchstart', begin)
+      el.removeEventListener('touchmove', move)
+      el.removeEventListener('touchend', end)
+      el.removeEventListener('touchcancel', end)
+    }
+  }, [])
+
+  // Keep whatever was between the fingers under them, rather than letting the
+  // page grow away from the thing being looked at.
+  useLayoutEffect(() => {
+    const el = scroller.current
+    const p = pinch.current
+    if (!el || !p || !p.from) return
+    const scale = zoom / p.from
+    el.scrollLeft = (el.scrollLeft + p.x) * scale - p.x
+    el.scrollTop = (el.scrollTop + p.y) * scale - p.y
+    pinch.current = null
+  }, [zoom])
+
   const sharpUrl = useRef<string | null>(null)
 
   const selected = annotations.find((a) => a.id === selectedId) ?? null
@@ -578,6 +652,7 @@ export function PageEditor({
         <div
           ref={scroller}
           className="recess grid min-h-0 flex-1 place-items-center overflow-auto p-4 sm:p-6"
+          style={{ touchAction: 'pan-x pan-y' }}
         >
           <div
             ref={surface}
@@ -867,6 +942,10 @@ export function PageEditor({
                 />
               </label>
 
+                <p className="coarse-only text-[12px] leading-relaxed text-ink-faint">
+                  Pinch with two fingers to zoom the page. Drag to move what you have
+                  selected, and pull the corner dot to resize it.
+                </p>
                 <p className="fine-only text-[12px] leading-relaxed text-ink-faint">
                   Arrow keys nudge, Shift+arrows move further. Ctrl +/− zooms, Ctrl 0 fits.
                   Double-click text to edit it on the page.

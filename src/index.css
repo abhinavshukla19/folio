@@ -496,6 +496,16 @@
   }
 }
 
+/* The other half of that pair: what only makes sense with fingers. */
+.coarse-only {
+  display: none;
+}
+@media (pointer: coarse) {
+  .coarse-only {
+    display: block;
+  }
+}
+
 @media (pointer: coarse) {
   .tap {
     min-height: 44px;
