@@ -3,7 +3,7 @@
 const ILLEGAL = /[\\/:*?"<>|]/g
 
 export function cleanFileName(raw: string) {
-  const trimmed = raw.replace(ILLEGAL, '-').replace(/\.pdf$/i, '').trim()
+  const trimmed = raw.replace(ILLEGAL, '-').replace(/\.(pdf|jpe?g|png|webp)$/i, '').trim()
   return trimmed || 'document'
 }
 
@@ -16,10 +16,13 @@ export function FileNameField({
   value,
   onChange,
   label = 'Save as',
+  extension = 'pdf',
 }: {
   value: string
   onChange: (next: string) => void
   label?: string
+  /** Shown but not editable: the output format is decided elsewhere. */
+  extension?: string
 }) {
   return (
     <label className="flex min-w-0 items-center gap-2">
@@ -37,7 +40,7 @@ export function FileNameField({
           aria-label="File name"
           className="w-[10rem] min-w-0 bg-transparent px-2.5 py-1.5 text-[13.5px] font-medium outline-none"
         />
-        <span className="data shrink-0 pr-2.5 text-[13px] text-ink-faint">.pdf</span>
+        <span className="data shrink-0 pr-2.5 text-[13px] text-ink-faint">.{extension}</span>
       </span>
     </label>
   )

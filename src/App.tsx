@@ -14,6 +14,9 @@ const ImagesToPdf = lazy(() =>
 const MergePdfs = lazy(() =>
   import('./features/merge/MergePdfs').then((m) => ({ default: m.MergePdfs })),
 )
+const EditPhoto = lazy(() =>
+  import('./features/photo/EditPhoto').then((m) => ({ default: m.EditPhoto })),
+)
 
 function RouteFallback() {
   return (
@@ -42,6 +45,7 @@ export default function App() {
           {route === 'organize' && <OrganizePdf />}
           {route === 'images' && <ImagesToPdf />}
           {route === 'merge' && <MergePdfs />}
+          {route === 'photo' && <EditPhoto />}
         </Suspense>
       )}
     </>

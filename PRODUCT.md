@@ -32,6 +32,9 @@ Three tools that run inside the browser tab.
 - **Image to PDF** — JPG, PNG and WEBP into one file, with page size,
   orientation, margin and quality controls.
 - **Merge PDFs** — up to five documents joined in a draggable order.
+- **Edit a photo** — crop to any shape or a fixed one, straighten, rotate,
+  flip, and adjust brightness, contrast and colour. Saves at an exact pixel
+  size, or under a file-size limit, which is what forms actually ask for.
 
 Success is finishing the task and leaving with a correct file, having never
 uploaded anything.
@@ -53,9 +56,12 @@ limits and accounts. Their look is the category default and worth avoiding.
   pdf-lib cannot embed it directly.
 - **Password-protected PDFs are not supported.** Detected and reported plainly
   rather than failing part-way.
-- **No compression tool, deliberately.** A browser can only re-encode images,
-  which frequently makes the file larger. Shipping the button would be
-  dishonest.
+- **No PDF compression tool, deliberately.** A browser can only re-encode the
+  images inside a PDF, which frequently makes the file larger. Shipping the
+  button would be dishonest. A *standalone* image is a different problem with
+  an honest answer, which is why the photo tool can hit a byte budget: it
+  spends quality first and reduces pixels only if quality alone cannot reach
+  the target — and it says so when it has to.
 - **Existing PDF text cannot be edited in place.** Cover and retype instead;
   flatten the page when the original must genuinely be removed.
 - No hard file-size limit; the ceiling is device memory. Pages rasterise at a

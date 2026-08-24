@@ -16,6 +16,12 @@ orientation, margin and quality controls.
 
 **Merge PDFs.** Up to five documents joined in a draggable order.
 
+**Edit a photo.** Crop freely or to a fixed shape, straighten, rotate, flip,
+and adjust brightness, contrast and colour. Export at an exact pixel size or
+under a file-size limit. Edits are descriptions rather than pixels — every
+one is measured against the original decoded bitmap and written exactly once,
+at export — so a photo does not lose a generation for each thing you changed.
+
 ## Running it
 
 ```
@@ -80,6 +86,10 @@ is the whole of `downloadBlob`; everything upstream of it is shared.
 - Both workspaces are lazy routes, so the landing page does not pull in pdf.js.
 - A strict Content-Security-Policy is injected at build time, and fonts are
   self-hosted, so the production bundle makes no outbound request.
+- Fitting an image under a byte budget spends quality first and pixels only
+  after, because a softer picture reads better than a smaller one. Both ends
+  are probed before any search, so the common cases — it already fits, or it
+  cannot at this size — cost one or two encodes rather than ten.
 
 ## Deliberate limits
 

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { DiagramImages, DiagramMerge, DiagramRearrange } from './Diagrams'
+import { DiagramCrop, DiagramImages, DiagramMerge, DiagramRearrange } from './Diagrams'
 import { Ledger } from './Ledger'
 
 type Tool = {
@@ -26,6 +26,13 @@ const TOOLS: Tool[] = [
     action: 'Open images',
     href: '#/images',
     diagram: <DiagramImages />,
+  },
+  {
+    name: 'Edit a photo',
+    desc: 'Crop, straighten and adjust. Save at an exact size, or under a file-size limit.',
+    action: 'Open a photo',
+    href: '#/photo',
+    diagram: <DiagramCrop />,
   },
   {
     name: 'Merge PDFs',

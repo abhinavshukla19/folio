@@ -149,6 +149,52 @@ export function DiagramImages() {
   )
 }
 
+/** Crop marks closing in on a photograph. */
+export function DiagramCrop() {
+  const corner = (x: number, y: number, sx: number, sy: number) => (
+    <path
+      key={`${x}-${y}`}
+      d={`M${x} ${y + 9 * sy} L${x} ${y} L${x + 9 * sx} ${y}`}
+      stroke="currentColor"
+      strokeWidth={STROKE * 1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+  )
+
+  return (
+    <svg viewBox="0 0 76 48" fill="none" className={box} aria-hidden="true">
+      <rect
+        x={6}
+        y={7}
+        width={48}
+        height={34}
+        rx={2}
+        fill="var(--sheet)"
+        stroke="currentColor"
+        strokeWidth={STROKE}
+        opacity={0.45}
+      />
+      <circle cx={17} cy={17} r={2.6} fill="currentColor" opacity={0.4} />
+      <path
+        d={`M8 38 L20 26 L28 33 L37 23 L52 38`}
+        stroke="currentColor"
+        strokeWidth={STROKE}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={0.4}
+      />
+
+      {/* the frame being pulled in from the edges */}
+      {corner(20, 2, 1, 1)}
+      {corner(70, 2, -1, 1)}
+      {corner(20, 46, 1, -1)}
+      {corner(70, 46, -1, -1)}
+    </svg>
+  )
+}
+
 /** Two documents becoming one thicker one. */
 export function DiagramMerge() {
   return (
