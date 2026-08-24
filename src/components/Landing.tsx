@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { DiagramCrop, DiagramImages, DiagramMerge, DiagramRearrange } from './Diagrams'
 import { Ledger } from './Ledger'
+import { Questions } from './Questions'
 
 type Tool = {
   name: string
@@ -92,6 +93,8 @@ export function Landing() {
       </div>
 
       <Ledger />
+
+      <Questions />
     </main>
   )
 }

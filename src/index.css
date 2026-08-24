@@ -455,6 +455,59 @@
 }
 
 /* -------------------------------------------------------------
+   A question that answers itself when asked.
+
+   The mark is a plus whose upright lies down as the answer opens, so
+   opening and closing read as one gesture and its reverse rather than
+   as two different symbols.
+   ------------------------------------------------------------- */
+.ask > summary {
+  list-style: none;
+  cursor: pointer;
+  transition: color 0.15s var(--ease-out);
+}
+.ask > summary::-webkit-details-marker {
+  display: none;
+}
+.ask > summary:hover {
+  color: var(--ink);
+}
+.ask-mark {
+  position: relative;
+  flex: none;
+  width: 11px;
+  height: 11px;
+  color: var(--ink-faint);
+}
+.ask-mark::before,
+.ask-mark::after {
+  content: '';
+  position: absolute;
+  background-color: currentColor;
+}
+.ask-mark::before {
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1.5px;
+  margin-top: -0.75px;
+}
+.ask-mark::after {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1.5px;
+  margin-left: -0.75px;
+  transition: transform 0.24s var(--ease-out);
+}
+.ask[open] .ask-mark::after {
+  transform: rotate(90deg);
+}
+.ask > summary:hover .ask-mark {
+  color: var(--ink-quiet);
+}
+
+/* -------------------------------------------------------------
    A phone on its side: plenty of width, almost no height. Width-based
    breakpoints read that as a tablet and hand the chrome its full size,
    which leaves the page a sliver. These rules key off height instead.
