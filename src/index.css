@@ -23,27 +23,44 @@
 /* Daylight studio: a cool concrete desk, a bright table, short
    soft shadows, and paper as the whitest thing on screen. */
 :root {
-  /* Nearly as bright as the table. The lift comes from --lift-2 and the
+  /* A lit room, and a violet one.
+
+     Nearly as bright as the table: the lift comes from --lift-2 and the
      rim, not from a tonal gap: a room dark enough to do that job on its
-     own stops being a room and becomes a mat around every surface. */
-  --room: #e7e9ed;
-  --table: #ffffff;
-  --recess: #edeff2;
+     own stops being a room and becomes a mat around every surface.
+
+     The hue is carried by every neutral rather than dropped on top of
+     grey ones, which is the difference between a palette and a tint. */
+  --room: #eae7f0;
+  --table: #fefdff;
+  --recess: #e1dcea;
+  /* Paper is never tinted. A PDF page is white, and showing it as anything
+     else would misrepresent the document. It also earns its keep: against a
+     violet desk a true-white page reads as genuinely lit. */
   --sheet: #ffffff;
 
-  --ink: #14161a;
-  --ink-quiet: #4f565f;
-  /* Clears 4.5:1 on the table and in a recess. It cannot clear it on the
-     ROOM -- a mid-tone is not a text surface. Text on the room is --ink or
-     --ink-quiet, never this. */
-  --ink-faint: #656d77;
+  --ink: #17151c;
+  --ink-quiet: #545065;
+  /* Clears 4.5:1 on the table and in a recess -- the recess is the tighter
+     of the two, at 4.62. It cannot clear it on the ROOM: a mid-tone is not
+     a text surface. Text on the room is --ink or --ink-quiet, never this. */
+  --ink-faint: #635d78;
 
-  --edge: #c9ced5;
-  --edge-soft: #dfe3e8;
+  --edge: #cdc6da;
+  --edge-soft: #ded8ea;
   /* A slider track has to read against the table it sits on, which --edge
      is too quiet to do. It is the only rule this token serves. */
-  --track: #8b94a0;
+  --track: #9891b0;
 
+  /* The one thing pressable things are painted with. Deep enough to carry
+     white at 7.9:1, dark enough that it never competes with a document. */
+  --accent: #52449b;
+  --accent-hover: #453a85;
+  --accent-ink: #ffffff;
+
+  /* The safelight keeps its own job. Amber still means one thing only --
+     a file of yours is loaded -- and it is the complement of the violet,
+     so it stays legible as a separate signal rather than a second accent. */
   --signal: #9a5400;
   --signal-fill: #c97b0a;
   --stop: #a3231b;
@@ -76,6 +93,13 @@
   --edge-soft: #21252b;
   --track: #626b7a;
 
+  /* The darkroom's own convention is that a hue arrives light, not deep --
+     the same reason --signal is a bright amber here and a burnt one in the
+     light theme. A deep violet would simply disappear into the room. */
+  --accent: #9b8fe0;
+  --accent-hover: #b0a5ea;
+  --accent-ink: #14161a;
+
   --signal: #ffb53d;
   --signal-fill: #ffb53d;
   --stop: #ff6b5e;
@@ -101,6 +125,9 @@
   --color-edge: var(--edge);
   --color-edge-soft: var(--edge-soft);
   --color-track: var(--track);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
   --color-signal: var(--signal);
   --color-signal-fill: var(--signal-fill);
   --color-stop: var(--stop);
@@ -119,9 +146,12 @@
   --color-ink-3: var(--ink-faint);
   --color-line: var(--edge);
   --color-line-strong: var(--edge);
-  --color-action: var(--ink);
-  --color-action-ink: var(--table);
-  --color-action-hover: var(--ink-quiet);
+  /* The old name for a primary action. It used to be the ink itself; it is
+     the accent now, which moves every screen still speaking the old
+     vocabulary onto the accent in one line. */
+  --color-action: var(--accent);
+  --color-action-ink: var(--accent-ink);
+  --color-action-hover: var(--accent-hover);
   --color-danger: var(--stop);
   --color-danger-bg: var(--stop-wash);
 
@@ -161,12 +191,12 @@
      Selection, caret, scrollbar and focus ship with defaults
      that belong to no design system. */
   ::selection {
-    background: color-mix(in srgb, var(--signal-fill) 34%, transparent);
+    background: color-mix(in srgb, var(--accent) 26%, transparent);
     color: var(--ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--ink);
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
     border-radius: 2px;
   }
@@ -174,7 +204,12 @@
   input,
   textarea,
   [contenteditable] {
-    caret-color: var(--signal);
+    caret-color: var(--accent);
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    accent-color: var(--accent);
   }
 
   ::-webkit-scrollbar {
@@ -197,7 +232,7 @@
   }
 
   a:not([class]) {
-    color: var(--ink);
+    color: var(--accent);
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
   }
@@ -226,7 +261,7 @@
     height: 15px;
     margin-top: -5.5px;
     border-radius: 50%;
-    background: var(--signal-fill);
+    background: var(--accent);
     border: 2px solid var(--table);
     box-shadow: var(--lift-1);
   }
@@ -240,7 +275,7 @@
     height: 15px;
     border: 2px solid var(--table);
     border-radius: 50%;
-    background: var(--signal-fill);
+    background: var(--accent);
     box-shadow: var(--lift-1);
   }
   input[type='range']:disabled {
@@ -341,7 +376,7 @@
   box-shadow: var(--lift-2);
 }
 .sheet-selected {
-  box-shadow: var(--lift-2), 0 0 0 2px var(--ink);
+  box-shadow: var(--lift-2), 0 0 0 2px var(--accent);
 }
 .sheet-focused {
   box-shadow: var(--lift-2), 0 0 0 1.5px var(--ink-faint);
@@ -507,7 +542,7 @@
   transform: rotate(90deg);
 }
 .ask > summary:hover .ask-mark {
-  color: var(--ink-quiet);
+  color: var(--accent);
 }
 
 /* -------------------------------------------------------------

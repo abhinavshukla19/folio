@@ -33,7 +33,7 @@ export default function App() {
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-[4px] focus:bg-ink focus:px-3.5 focus:py-2 focus:text-[13px] focus:font-semibold focus:text-table"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-[4px] focus:bg-accent focus:px-3.5 focus:py-2 focus:text-[13px] focus:font-semibold focus:text-accent-ink"
       >
         Skip to content
       </a>

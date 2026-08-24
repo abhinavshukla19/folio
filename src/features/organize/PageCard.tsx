@@ -160,7 +160,7 @@ export function PageCard({
       <div className="mt-2 flex items-center justify-center gap-1.5">
         <span
           className={`data inline-flex h-5 min-w-5 items-center justify-center rounded-[3px] px-1 text-[11.5px] font-medium tabular-nums ${
-            selected ? 'bg-ink text-table' : 'text-ink-faint'
+            selected ? 'bg-accent text-accent-ink' : 'text-ink-faint'
           }`}
         >
           {index + 1}

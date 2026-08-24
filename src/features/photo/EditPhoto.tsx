@@ -93,7 +93,7 @@ function Chip({
       aria-pressed={on}
       className={`tap rounded-[4px] px-2.5 py-1.5 text-[13px] font-medium transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         on
-          ? 'bg-ink text-table'
+          ? 'bg-accent text-accent-ink'
           : 'text-ink-quiet hover:-translate-y-px hover:bg-table hover:text-ink hover:shadow-[var(--lift-1)]'
       }`}
     >
@@ -534,7 +534,7 @@ export function EditPhoto() {
                 aria-pressed={linked}
                 title={linked ? 'Width and height stay in proportion' : 'Width and height move freely'}
                 className={`tap mb-1 rounded-[4px] px-2 py-1.5 text-[12px] font-medium ${
-                  linked ? 'bg-ink text-table' : 'text-ink-quiet hover:bg-table hover:text-ink'
+                  linked ? 'bg-accent text-accent-ink' : 'text-ink-quiet hover:bg-table hover:text-ink'
                 }`}
               >
                 {linked ? 'linked' : 'free'}
@@ -615,7 +615,7 @@ export function EditPhoto() {
                 type="button"
                 onClick={() => void save()}
                 disabled={!!busy}
-                className="tap ml-auto inline-flex h-9 items-center gap-2 rounded-[4px] bg-ink px-4 text-[13.5px] font-semibold tracking-[-0.005em] text-table shadow-[var(--lift-1)] transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] enabled:hover:-translate-y-px enabled:hover:shadow-[var(--lift-2)] disabled:pointer-events-none disabled:opacity-40"
+                className="tap ml-auto inline-flex h-9 items-center gap-2 rounded-[4px] bg-accent px-4 text-[13.5px] font-semibold tracking-[-0.005em] text-accent-ink shadow-[var(--lift-1)] transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] enabled:hover:-translate-y-px enabled:hover:shadow-[var(--lift-2)] disabled:pointer-events-none disabled:opacity-40"
               >
                 <Download size={15} />
                 Download

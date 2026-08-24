@@ -81,7 +81,7 @@ export function Landing() {
                 {/* A control sitting in the socket: raised out of the recess,
                     and it rises further under the pointer. */}
                 <span
-                  className="mt-4 inline-flex h-9 w-fit items-center rounded-[4px] bg-table px-3.5 text-[13.5px] font-semibold tracking-[-0.005em] text-ink transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-px lg:mt-6 lg:text-[14px]"
+                  className="mt-4 inline-flex h-9 w-fit items-center rounded-[4px] bg-accent px-3.5 text-[13.5px] font-semibold tracking-[-0.005em] text-accent-ink transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-px lg:mt-6 lg:text-[14px]"
                   style={{ boxShadow: 'var(--lift-1), var(--rim)' }}
                 >
                   {tool.action}

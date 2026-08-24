@@ -1032,7 +1032,9 @@ function Toggle({
       aria-label={label}
       title={label}
       className={`tap grid h-9 w-9 shrink-0 place-items-center rounded-[4px] border transition-colors duration-200 ${
-        on ? 'border-ink bg-ink text-table' : 'border-edge text-ink-quiet hover:border-ink hover:text-ink'
+        on
+          ? 'border-accent bg-accent text-accent-ink'
+          : 'border-edge text-ink-quiet hover:border-ink hover:text-ink'
       }`}
     >
       {children}

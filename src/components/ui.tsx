@@ -28,7 +28,7 @@ const SIZES = {
  */
 const VARIANTS = {
   solid:
-    'bg-ink text-table shadow-[var(--lift-1)] enabled:hover:-translate-y-px enabled:hover:shadow-[var(--lift-2)]',
+    'bg-accent text-accent-ink shadow-[var(--lift-1)] enabled:hover:-translate-y-px enabled:hover:shadow-[var(--lift-2)]',
   outline:
     'bg-table text-ink shadow-[var(--lift-1),var(--rim)] enabled:hover:-translate-y-px enabled:hover:shadow-[var(--lift-2),var(--rim)]',
   ghost: 'text-ink-quiet enabled:hover:bg-table enabled:hover:text-ink enabled:hover:shadow-[var(--lift-1)]',
