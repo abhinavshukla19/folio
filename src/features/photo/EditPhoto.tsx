@@ -48,10 +48,30 @@ const TARGETS = [
   { id: 'm1', label: 'Under 1 MB', kb: 1024 },
 ]
 
-function Group({ label, children }: { label: string; children: React.ReactNode }) {
+function Group({
+  label,
+  onReset,
+  children,
+}: {
+  label: string
+  /** Shown only once something in the group has actually moved. */
+  onReset?: () => void
+  children: React.ReactNode
+}) {
   return (
     <div>
-      <span className="meta mb-2 block">{label}</span>
+      <div className="mb-2 flex items-baseline justify-between gap-3">
+        <span className="meta">{label}</span>
+        {onReset && (
+          <button
+            type="button"
+            onClick={onReset}
+            className="tap rounded-[3px] px-1.5 text-[12px] font-medium text-ink-quiet transition-colors duration-150 hover:text-ink"
+          >
+            Reset
+          </button>
+        )}
+      </div>
       {children}
     </div>
   )
@@ -90,6 +110,7 @@ function Slider({
   step,
   onChange,
   format,
+  reset,
 }: {
   label: string
   value: number
@@ -98,12 +119,31 @@ function Slider({
   step: number
   onChange: (n: number) => void
   format: (n: number) => string
+  /** Where this control sits when nothing has been done to it. */
+  reset: number
 }) {
+  const moved = Math.abs(value - reset) > step / 2
   return (
     <label className="block">
       <span className="meta flex items-baseline justify-between">
         <span>{label}</span>
-        <span className="data text-ink-quiet">{format(value)}</span>
+        {/* The reading doubles as the way back: chasing an exact value with a
+            thumb is the one thing a slider is bad at. */}
+        <button
+          type="button"
+          onClick={() => onChange(reset)}
+          title={moved ? 'Put this back' : undefined}
+          /* Negative margin absorbs the padding, so the target grows without
+             the row growing with it -- four of these would otherwise add a
+             hundred pixels to a phone screen. */
+          className={`data -my-3 rounded-[3px] px-2 py-3 ${
+            moved
+              ? 'text-ink underline decoration-dotted underline-offset-2'
+              : 'text-ink-quiet'
+          }`}
+        >
+          {format(value)}
+        </button>
       </span>
       <input
         type="range"
@@ -111,6 +151,7 @@ function Slider({
         max={max}
         step={step}
         value={value}
+        onDoubleClick={() => onChange(reset)}
         onChange={(e) => onChange(Number(e.target.value))}
         className="mt-2 w-full cursor-pointer"
       />
@@ -363,7 +404,20 @@ export function EditPhoto() {
 
         {/* the controls */}
         <aside className="table-plane space-y-6 p-4 sm:p-5">
-          <Group label="Crop">
+          <Group
+            label="Crop"
+            onReset={
+              ratioId !== 'free' ||
+              edit.crop.x !== 0 ||
+              edit.crop.y !== 0 ||
+              Math.round(edit.crop.w) !== oriented.width
+                ? () => {
+                    setRatioId('free')
+                    apply({ crop: fullFrameCrop(source, edit.quarterTurns) })
+                  }
+                : undefined
+            }
+          >
             <div className="flex flex-wrap gap-1">
               {RATIOS.map((r) => (
                 <Chip key={r.id} on={ratioId === r.id} onClick={() => setRatioId(r.id)}>
@@ -373,7 +427,14 @@ export function EditPhoto() {
             </div>
           </Group>
 
-          <Group label="Turn">
+          <Group
+            label="Turn"
+            onReset={
+              edit.quarterTurns || edit.straighten || edit.flipX || edit.flipY
+                ? () => apply({ quarterTurns: 0, straighten: 0, flipX: false, flipY: false })
+                : undefined
+            }
+          >
             <div className="flex flex-wrap items-center gap-1">
               <WorkspaceButton onClick={() => turn(-1)} icon={<RotateCcw size={15} />} iconOnly label="Rotate left" />
               <WorkspaceButton onClick={() => turn(1)} icon={<RotateCw size={15} />} iconOnly label="Rotate right" />
@@ -399,11 +460,19 @@ export function EditPhoto() {
                 step={0.1}
                 onChange={(straighten) => apply({ straighten })}
                 format={(n) => `${n.toFixed(1)}°`}
+                reset={0}
               />
             </div>
           </Group>
 
-          <Group label="Adjust">
+          <Group
+            label="Adjust"
+            onReset={
+              edit.brightness !== 1 || edit.contrast !== 1 || edit.saturation !== 1
+                ? () => apply({ brightness: 1, contrast: 1, saturation: 1 })
+                : undefined
+            }
+          >
             <div className="space-y-3">
               <Slider
                 label="Brightness"
@@ -413,6 +482,7 @@ export function EditPhoto() {
                 step={0.01}
                 onChange={(brightness) => apply({ brightness })}
                 format={(n) => `${Math.round(n * 100)}%`}
+                reset={1}
               />
               <Slider
                 label="Contrast"
@@ -422,6 +492,7 @@ export function EditPhoto() {
                 step={0.01}
                 onChange={(contrast) => apply({ contrast })}
                 format={(n) => `${Math.round(n * 100)}%`}
+                reset={1}
               />
               <Slider
                 label="Colour"
@@ -431,6 +502,7 @@ export function EditPhoto() {
                 step={0.01}
                 onChange={(saturation) => apply({ saturation })}
                 format={(n) => `${Math.round(n * 100)}%`}
+                reset={1}
               />
             </div>
           </Group>

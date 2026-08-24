@@ -189,17 +189,27 @@ export function CropFrame({
               tabIndex={-1}
               aria-label={`Resize from ${h}`}
               onPointerDown={(e) => begin(e, h)}
-              className="absolute rounded-[2px] bg-white shadow-[0_0_0_1px_rgb(6_8_10/0.5)]"
+              className="absolute grid place-items-center"
               style={{
                 left,
                 top,
-                width: corner ? 14 : 22,
-                height: corner ? 14 : 22,
+                // The grab area is deliberately bigger than the mark it draws.
+                // A 14px dot is easy to see and impossible to catch with a
+                // thumb; this is the same 44px floor the rest of the app holds
+                // to on a touch screen.
+                width: 44,
+                height: 44,
                 transform: 'translate(-50%, -50%)',
                 cursor: CURSORS[h],
                 touchAction: 'none',
               }}
-            />
+            >
+              <span
+                aria-hidden="true"
+                className="block rounded-[2px] bg-white shadow-[0_0_0_1px_rgb(6_8_10/0.5)]"
+                style={{ width: corner ? 14 : 22, height: corner ? 14 : 22 }}
+              />
+            </span>
           )
         })}
       </div>
