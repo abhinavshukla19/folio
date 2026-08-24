@@ -32,7 +32,7 @@ const CSP = [
 
 /**
  * Every asset URL is relative to the page, so the build runs from wherever it
- * is put: the domain root, a project subdirectory like GitHub Pages serves,
+ * is put: the domain root Cloudflare Pages serves from, a subdirectory,
  * or the app's own origin. Absolute URLs were pinning it to one path and a
  * redirect, and anything opened outside that path came up blank. Routing is
  * hash-based already, so no host needs rewrite rules either.
