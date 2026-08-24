@@ -31,21 +31,23 @@ const CSP = [
 ].join('; ')
 
 /**
- * GitHub Pages serves a project site from a subdirectory, so the built asset
- * URLs need that prefix. Routing is hash-based already, which is why no
- * rewrite rules are needed on any static host.
+ * Every asset URL is relative to the page, so the build runs from wherever it
+ * is put: the domain root, a project subdirectory like GitHub Pages serves,
+ * or the app's own origin. Absolute URLs were pinning it to one path and a
+ * redirect, and anything opened outside that path came up blank. Routing is
+ * hash-based already, so no host needs rewrite rules either.
  */
-const BASE = process.env.FOLIO_BASE ?? '/folio/'
+const BASE = process.env.FOLIO_BASE ?? './'
 
 export default defineConfig(({ command, mode }) => {
   // `vite build --mode capacitor` produces the bundle that ships inside the
-  // Android app: relative URLs, because Capacitor serves it from the root of
-  // its own origin, and no service worker, because there is no network to be
-  // offline from -- the assets are already on the device.
+  // Android app. Same relative URLs; what differs is the service worker,
+  // which is pointless there -- the assets are already on the device, so
+  // there is no network to be offline from.
   const forApp = mode === 'capacitor'
 
   return {
-  base: forApp ? './' : BASE,
+  base: BASE,
   plugins: [
     react(),
     tailwindcss(),

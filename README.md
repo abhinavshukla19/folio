@@ -37,8 +37,12 @@ npx oxlint src/   # lint
 The web build is a PWA: a service worker precaches the whole bundle, including
 the pdf.js worker, so an installed copy opens and works with no network at all.
 Install it from the browser — "Add to Home screen" on a phone, or the install
-button in Chrome's address bar on a desktop. Pushing to `master` deploys it to
-GitHub Pages, which is why `base` is `/folio/`.
+button in Chrome's address bar on a desktop.
+
+Cloudflare Pages builds and deploys on every push to `master`. Asset URLs are
+relative, so the same build runs from a domain root, a project subdirectory or
+the app's own origin without being rebuilt for each; routing is hash-based, so
+no host needs rewrite rules either.
 
 There is also an Android wrapper, for a real installable `.apk` that carries
 its own copy of the site:

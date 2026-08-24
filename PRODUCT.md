@@ -5,7 +5,7 @@ Durable decisions about what Folio is, so they do not get re-litigated later.
 ## Platform
 
 Web. Static SPA on Vite + React 19 + TypeScript + Tailwind 4. No backend, no
-server runtime. Deployed to GitHub Pages from `master`.
+server runtime. Deployed by Cloudflare Pages on every push to `master`.
 
 Installable two ways, both carrying the same bundle. The web build is a PWA
 whose service worker precaches everything, including the pdf.js worker, so an
