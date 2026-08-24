@@ -50,13 +50,13 @@ const TOOLS: Tool[] = [
  */
 export function Landing() {
   return (
-    <main id="main" className="mx-auto w-full max-w-5xl px-5 pb-24 pt-10 sm:px-8 sm:pt-16">
+    <main id="main" className="mx-auto w-full max-w-6xl px-5 pb-24 pt-10 sm:px-8 sm:pt-16">
       <h1 className="display max-w-[52rem] text-balance text-[clamp(2.05rem,5.9vw,3.5rem)]">
         Edit, convert and merge PDFs without uploading them.
       </h1>
 
       <div className="lights-up table-plane relative mt-9 p-2 sm:mt-12 sm:p-2.5">
-        <div className="grid gap-2 lg:grid-cols-3 lg:gap-2.5">
+        <div className="grid gap-2 lg:grid-cols-4 lg:gap-2.5">
           {TOOLS.map((tool) => (
             <a
               key={tool.href}

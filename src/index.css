@@ -23,7 +23,10 @@
 /* Daylight studio: a cool concrete desk, a bright table, short
    soft shadows, and paper as the whitest thing on screen. */
 :root {
-  --room: #d7d9dd;
+  /* Nearly as bright as the table. The lift comes from --lift-2 and the
+     rim, not from a tonal gap: a room dark enough to do that job on its
+     own stops being a room and becomes a mat around every surface. */
+  --room: #e7e9ed;
   --table: #ffffff;
   --recess: #edeff2;
   --sheet: #ffffff;

@@ -67,11 +67,13 @@ export function Ledger() {
           : `${foreign} request${foreign === 1 ? '' : 's'} left this tab.`}
       </h2>
 
-      <dl className="mt-5 border-t border-edge-soft">
+      {/* --edge, not --edge-soft: these rules are drawn on the room, and the
+          soft one is tuned for a line on the table. */}
+      <dl className="mt-5 border-t border-edge">
         {lines.map((line) => (
           <div
             key={line.label}
-            className="flex items-baseline gap-3 border-b border-edge-soft py-3.5 sm:gap-4"
+            className="flex items-baseline gap-3 border-b border-edge py-3.5 sm:gap-4"
           >
             <dt className="shrink-0 text-[14px] text-ink-quiet sm:text-[15px]">{line.label}</dt>
 
