@@ -7,6 +7,8 @@ type Props = {
   title: string
   hint: ReactNode
   compact?: boolean
+  /** What the slot is waiting for. A photo tool asking for a page is a lie. */
+  mark?: 'sheet' | 'picture'
 }
 
 /** A sheet, drawn in the same stroke as the slot diagrams on the home screen. */
@@ -32,7 +34,44 @@ function SheetMark() {
   )
 }
 
-export function Dropzone({ accept, multiple = false, onFiles, title, hint, compact }: Props) {
+/** A picture, in the same stroke: landscape, with a horizon and a sun. */
+function PictureMark() {
+  return (
+    <svg viewBox="0 0 40 32" fill="none" className="h-8 w-10" aria-hidden="true">
+      <rect
+        x="1"
+        y="1"
+        width="38"
+        height="30"
+        rx="2.5"
+        fill="var(--sheet)"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <g
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.3"
+        fill="none"
+      >
+        <circle cx="11" cy="11" r="2.6" />
+        <path d="M3 27 L13 16 L19 22 L26 14 L37 26" />
+      </g>
+    </svg>
+  )
+}
+
+export function Dropzone({
+  accept,
+  multiple = false,
+  onFiles,
+  title,
+  hint,
+  compact,
+  mark = 'sheet',
+}: Props) {
   const input = useRef<HTMLInputElement>(null)
   const [over, setOver] = useState(false)
   // dragenter/leave fire for every child element; count depth instead of toggling.
@@ -101,7 +140,7 @@ export function Dropzone({ accept, multiple = false, onFiles, title, hint, compa
 
       {!compact && (
         <span className={`mb-5 block ${over ? 'text-signal' : 'text-ink-faint'}`}>
-          <SheetMark />
+          {mark === 'picture' ? <PictureMark /> : <SheetMark />}
         </span>
       )}
 

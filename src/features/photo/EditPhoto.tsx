@@ -353,6 +353,7 @@ export function EditPhoto() {
         >
           <Dropzone
             accept={ACCEPT}
+            mark="picture"
             onFiles={(files) => void open(files[0])}
             title="Open a photo"
             hint="Choose a file, or drop one here. JPG, PNG and WEBP. It never leaves your device."

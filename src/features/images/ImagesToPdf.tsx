@@ -184,6 +184,7 @@ export function ImagesToPdf() {
           <Dropzone
             accept={ACCEPT}
             multiple
+            mark="picture"
             onFiles={add}
             title="Open images"
             hint="Choose files, or drop them here. JPG, PNG and WEBP. They never leave your device."
