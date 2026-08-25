@@ -219,3 +219,52 @@ export function DiagramMerge() {
     </svg>
   )
 }
+
+/**
+ * A page seen at an angle, and the same page square. The transform this tool
+ * performs is exactly that: the quadrilateral the camera saw, mapped back to
+ * the rectangle the paper actually is.
+ */
+export function DiagramScan() {
+  return (
+    <svg viewBox="0 0 112 48" fill="none" className={box} aria-hidden="true">
+      {/* the page as the camera sees it: converging edges */}
+      <path
+        d="M8 12 L40 5 L44 41 L11 44 Z"
+        fill="var(--sheet)"
+        stroke="currentColor"
+        strokeWidth={STROKE}
+        strokeLinejoin="round"
+        opacity={0.55}
+      />
+      <g stroke="currentColor" strokeWidth={STROKE} strokeLinecap="round" opacity={0.35}>
+        <path d="M14 18 L35 14" />
+        <path d="M15 24 L36 20" />
+        <path d="M16 30 L31 27" />
+      </g>
+
+      {/* the corners being found */}
+      <g fill="currentColor">
+        <circle cx={8} cy={12} r={2.4} />
+        <circle cx={40} cy={5} r={2.4} />
+        <circle cx={44} cy={41} r={2.4} />
+        <circle cx={11} cy={44} r={2.4} />
+      </g>
+
+      <path
+        d="M55 24 L67 24 M63 20 L67 24 L63 28"
+        stroke="currentColor"
+        strokeWidth={STROKE}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={0.6}
+      />
+
+      {/* the page as it actually is */}
+      <Sheet x={76} y={6} w={28} h={36} strong />
+      <Rule x={81} y={15} w={18} />
+      <Rule x={81} y={21} w={18} />
+      <Rule x={81} y={27} w={13} />
+    </svg>
+  )
+}

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { DiagramCrop, DiagramImages, DiagramMerge, DiagramRearrange } from './Diagrams'
+import { DiagramCrop, DiagramImages, DiagramMerge, DiagramRearrange, DiagramScan } from './Diagrams'
 import { Ledger } from './Ledger'
 import { Questions } from './Questions'
 
@@ -56,6 +56,33 @@ export function Landing() {
       </h1>
 
       <div className="lights-up table-plane relative mt-9 p-2 sm:mt-12 sm:p-2.5">
+        {/* The one people come back for, given the width to say so. */}
+        <a
+          href="#/scan"
+          className="slot recess group mb-2 flex gap-4 rounded-[5px] p-5 sm:mb-2.5 lg:items-center lg:gap-8 lg:px-7 lg:py-6"
+        >
+          <span className="block h-12 w-[76px] shrink-0 text-ink-quiet lg:h-20 lg:w-[168px]">
+            <DiagramScan />
+          </span>
+
+          <span className="flex min-w-0 flex-col lg:flex-1">
+            <h2 className="text-[16px] font-semibold tracking-[-0.012em] lg:text-[19px]">
+              Scan to PDF
+            </h2>
+            <p className="mt-1.5 max-w-[52ch] text-[13.5px] leading-relaxed text-ink-quiet lg:mt-2 lg:text-[14.5px]">
+              Photograph a page. Its corners are found, the perspective is straightened, and the
+              shadow comes off — then save the lot as one document.
+            </p>
+          </span>
+
+          <span
+            className="mt-4 hidden h-9 w-fit shrink-0 items-center self-center rounded-[4px] bg-accent px-3.5 text-[14px] font-semibold tracking-[-0.005em] text-accent-ink transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-px lg:mt-0 lg:inline-flex"
+            style={{ boxShadow: 'var(--lift-1)' }}
+          >
+            Open the camera
+          </span>
+        </a>
+
         <div className="grid gap-2 lg:grid-cols-4 lg:gap-2.5">
           {TOOLS.map((tool) => (
             <a

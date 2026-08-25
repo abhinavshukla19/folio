@@ -31,6 +31,8 @@ Three tools that run inside the browser tab.
   covers, images and drawn signatures; download any selection on its own.
 - **Image to PDF** — JPG, PNG and WEBP into one file, with page size,
   orientation, margin and quality controls.
+- **Scan to PDF** — photograph a page; its corners are found, the perspective is
+  straightened, and the shadow is taken off. Page after page, then one document.
 - **Merge PDFs** — up to five documents joined in a draggable order.
 - **Edit a photo** — crop to any shape or a fixed one, straighten, rotate,
   flip, and adjust brightness, contrast and colour. Saves at an exact pixel

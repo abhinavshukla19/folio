@@ -38,4 +38,17 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+        The scanner photographs a page through the WebView's own getUserMedia.
+        Nothing is recorded and nothing is sent: the frame is captured, turned
+        into a page, and kept in memory until the PDF is saved.
+
+        The camera is declared optional so the app still installs on a device
+        without one - every tool including the scanner also accepts a photo
+        that is already on the device.
+    -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 </manifest>

@@ -14,6 +14,11 @@ signatures, each freely movable, resizable and rotatable to any angle.
 **Image to PDF.** JPG, PNG and WEBP into one document, with page size,
 orientation, margin and quality controls.
 
+**Scan to PDF.** Photograph a page and get a document back. The page is found in
+the frame, the perspective is solved and mapped back to a rectangle, and the
+lighting is evened out per pixel so a shadow across the paper comes off instead
+of turning half of it black. Several pages, one PDF.
+
 **Merge PDFs.** Up to five documents joined in a draggable order.
 
 **Edit a photo.** Crop freely or to a fixed shape, straighten, rotate, flip,
@@ -90,6 +95,15 @@ is the whole of `downloadBlob`; everything upstream of it is shared.
   after, because a softer picture reads better than a smaller one. Both ends
   are probed before any search, so the common cases — it already fits, or it
   cannot at this size — cost one or two encodes rather than ten.
+- Page detection scores whole shapes rather than ranking single lines. On a
+  page of text the rows out-vote the edge of the paper, so the loudest lines
+  are the writing; the page is instead the largest quadrilateral whose entire
+  outline lies on a real gradient. When nothing scores well enough it says so
+  and hands you four corners to drag, rather than cropping the document wrong.
+- Straightening is a projective transform, which `drawImage` cannot do — it
+  only ever applies an affine one, and no affine map makes converging edges
+  parallel again. The homography is solved from the four corners and the
+  destination sampled directly.
 
 ## Deliberate limits
 

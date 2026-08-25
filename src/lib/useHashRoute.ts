@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export type Route = 'home' | 'organize' | 'images' | 'merge' | 'photo'
+export type Route = 'home' | 'scan' | 'organize' | 'images' | 'merge' | 'photo'
 
 /**
  * Routes live under `#/`, so plain in-page anchors (`#tools`, `#faq`) keep
@@ -9,6 +9,7 @@ export type Route = 'home' | 'organize' | 'images' | 'merge' | 'photo'
  */
 function parse(): Route {
   const hash = window.location.hash
+  if (hash.startsWith('#/scan')) return 'scan'
   if (hash.startsWith('#/organize')) return 'organize'
   if (hash.startsWith('#/images')) return 'images'
   if (hash.startsWith('#/merge')) return 'merge'

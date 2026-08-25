@@ -5,6 +5,9 @@ import { useHashRoute } from './lib/useHashRoute'
 
 // pdf.js and pdf-lib are several hundred kB together and nothing on the
 // landing page needs them, so each workspace loads only when it is opened.
+const ScanDocument = lazy(() =>
+  import('./features/scan/ScanDocument').then((m) => ({ default: m.ScanDocument })),
+)
 const OrganizePdf = lazy(() =>
   import('./features/organize/OrganizePdf').then((m) => ({ default: m.OrganizePdf })),
 )
@@ -42,6 +45,7 @@ export default function App() {
       {route === 'home' && <Landing />}
       {route !== 'home' && (
         <Suspense fallback={<RouteFallback />}>
+          {route === 'scan' && <ScanDocument />}
           {route === 'organize' && <OrganizePdf />}
           {route === 'images' && <ImagesToPdf />}
           {route === 'merge' && <MergePdfs />}
