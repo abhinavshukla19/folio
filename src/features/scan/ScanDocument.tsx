@@ -4,7 +4,7 @@ import { Dropzone } from '../../components/Dropzone'
 import { Intake } from '../../components/Intake'
 import { FileNameField, cleanFileName } from '../../components/FileNameField'
 import { Residency } from '../../components/Residency'
-import { Workspace, WorkspaceError } from '../Workspace'
+import { Workspace, WorkspaceError, WorkspaceNote } from '../Workspace'
 import { downloadBlob, imagesToPdf, type MarginId, type PageSizeId } from '../../lib/pdf/export'
 import { detectPage, fullFrame, type Quad } from '../../lib/scan/detect'
 import { ENHANCERS, flatten, thumbnail, toFile, type Enhance } from '../../lib/scan/page'
@@ -54,6 +54,7 @@ export function ScanDocument() {
   const [pages, setPages] = useState<Page[]>([])
   const [busy, setBusy] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [saved, setSaved] = useState<string | null>(null)
 
   const [size, setSize] = useState<PageSizeId>('a4')
   const [margin, setMargin] = useState<MarginId>('small')
@@ -158,6 +159,7 @@ export function ScanDocument() {
     setPages([])
     setStage('idle')
     setError(null)
+    setSaved(null)
     setBusy(null)
   }, [pending])
 
@@ -166,6 +168,7 @@ export function ScanDocument() {
   const save = useCallback(async () => {
     if (!pages.length) return
     setError(null)
+    setSaved(null)
     setBusy('Building the PDF…')
     try {
       const files = await Promise.all(
@@ -176,7 +179,9 @@ export function ScanDocument() {
         { size, orientation: 'portrait', margin, quality: 0.9 },
         (done, total) => setBusy(`Building the PDF — page ${done} of ${total}…`),
       )
-      await downloadBlob(blob, `${cleanFileName(name) || 'scan'}.pdf`)
+      const filename = `${cleanFileName(name) || 'scan'}.pdf`
+      await downloadBlob(blob, filename, () => setBusy('Choose where to keep it…'))
+      setSaved(filename)
     } catch {
       setError('That document could not be saved.')
     } finally {
@@ -368,6 +373,20 @@ export function ScanDocument() {
       busy={busy}
     >
       {error && <WorkspaceError>{error}</WorkspaceError>}
+      {saved && (
+        <WorkspaceNote onDismiss={() => setSaved(null)}>
+          <span className="font-medium">{saved}</span> is on its way. The pages are still here if
+          you want to save them again, or{' '}
+          <button
+            type="button"
+            onClick={clearAll}
+            className="rounded-[3px] font-medium text-accent underline decoration-dotted underline-offset-2"
+          >
+            start a new scan
+          </button>
+          .
+        </WorkspaceNote>
+      )}
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="table-plane p-3 sm:p-4">

@@ -59,13 +59,17 @@ export function Landing() {
         {/* The one people come back for, given the width to say so. */}
         <a
           href="#/scan"
-          className="slot recess group mb-2 flex gap-4 rounded-[5px] p-5 sm:mb-2.5 lg:items-center lg:gap-8 lg:px-7 lg:py-6"
+          /* The control wraps onto its own line on a phone and sits inline
+             from lg. It used to be hidden below lg, which left the one tool
+             people open this for as the only card with no button on the
+             screen it is mostly used from. */
+          className="slot recess group mb-2 flex flex-wrap gap-4 rounded-[5px] p-5 sm:mb-2.5 lg:flex-nowrap lg:items-center lg:gap-8 lg:px-7 lg:py-6"
         >
           <span className="block h-12 w-[76px] shrink-0 text-ink-quiet lg:h-20 lg:w-[168px]">
             <DiagramScan />
           </span>
 
-          <span className="flex min-w-0 flex-col lg:flex-1">
+          <span className="flex min-w-0 flex-1 flex-col">
             <h2 className="text-[16px] font-semibold tracking-[-0.012em] lg:text-[19px]">
               Scan to PDF
             </h2>
@@ -76,7 +80,7 @@ export function Landing() {
           </span>
 
           <span
-            className="mt-4 hidden h-9 w-fit shrink-0 items-center self-center rounded-[4px] bg-accent px-3.5 text-[14px] font-semibold tracking-[-0.005em] text-accent-ink transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-px lg:mt-0 lg:inline-flex"
+            className="tap inline-flex h-11 w-full shrink-0 items-center justify-center rounded-[4px] bg-accent px-3.5 text-[14px] font-semibold tracking-[-0.005em] text-accent-ink transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-px lg:h-9 lg:w-fit lg:self-center"
             style={{ boxShadow: 'var(--lift-1)' }}
           >
             Open the camera

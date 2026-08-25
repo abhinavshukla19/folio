@@ -258,8 +258,12 @@ async function saveOnDevice(blob: Blob, filename: string) {
  * browser's own download, triggered synchronously so it stays inside the
  * click that asked for it.
  */
-export async function downloadBlob(blob: Blob, filename: string) {
+export async function downloadBlob(blob: Blob, filename: string, onHandoff?: () => void) {
   if (Capacitor.isNativePlatform()) {
+    // The share sheet can sit open for as long as it takes to pick a folder,
+    // and the caller's "building..." line would otherwise still be showing
+    // behind it long after the building finished.
+    onHandoff?.()
     await saveOnDevice(blob, filename)
     return
   }

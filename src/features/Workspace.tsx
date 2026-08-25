@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowLeft, Loader2 } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, Check, Loader2, X } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Button } from '../components/ui'
 import { navigate } from '../lib/useHashRoute'
@@ -73,6 +73,37 @@ export function Workspace({ title, subtitle, active = false, onClear, busy, chil
 
       <div className="mt-5">{children}</div>
     </main>
+  )
+}
+
+/**
+ * The file has gone. Worth saying out loud: on the web the browser puts up its
+ * own download bar, but inside the app the share sheet closes and leaves the
+ * screen exactly as it was, so without this there is nothing anywhere to tell
+ * you whether anything happened.
+ */
+export function WorkspaceNote({
+  children,
+  onDismiss,
+}: {
+  children: ReactNode
+  onDismiss?: () => void
+}) {
+  return (
+    <div className="mb-4 flex items-start gap-2.5 rounded-[5px] border border-edge bg-table px-4 py-3 text-[13.5px] shadow-[var(--lift-1)]">
+      <Check size={15} className="mt-0.5 shrink-0 text-accent" />
+      <span className="min-w-0 flex-1">{children}</span>
+      {onDismiss && (
+        <button
+          type="button"
+          onClick={onDismiss}
+          aria-label="Dismiss"
+          className="tap -my-1 -mr-1.5 grid h-7 w-7 shrink-0 place-items-center rounded-[4px] text-ink-quiet transition-colors duration-150 hover:bg-recess hover:text-ink"
+        >
+          <X size={14} />
+        </button>
+      )}
+    </div>
   )
 }
 

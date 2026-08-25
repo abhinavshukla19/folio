@@ -21,7 +21,7 @@ import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { Dropzone } from '../../components/Dropzone'
 import { Intake } from '../../components/Intake'
 import { FileNameField, cleanFileName } from '../../components/FileNameField'
-import { Workspace, WorkspaceError } from '../Workspace'
+import { Workspace, WorkspaceError, WorkspaceNote } from '../Workspace'
 import { downloadBlob, mergePdfs } from '../../lib/pdf/export'
 import { EncryptedPdfError, loadPdf, renderThumbnail } from '../../lib/pdf/pdfjs'
 
@@ -106,6 +106,7 @@ export function MergePdfs() {
   const [docs, setDocs] = useState<Doc[]>([])
   const [busy, setBusy] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [saved, setSaved] = useState<string | null>(null)
   const [outName, setOutName] = useState('merged')
   const [confirming, setConfirming] = useState(false)
 
@@ -199,13 +200,16 @@ export function MergePdfs() {
   const save = useCallback(async () => {
     if (docs.length < 2) return
     setError(null)
+    setSaved(null)
     setBusy('Merging…')
     try {
       const blob = await mergePdfs(
         docs.map((d) => ({ name: d.name, bytes: d.bytes })),
         (done, total) => setBusy(`Adding document ${done} of ${total}…`),
       )
-      await downloadBlob(blob, `${cleanFileName(outName)}.pdf`)
+      const filename = `${cleanFileName(outName)}.pdf`
+      await downloadBlob(blob, filename, () => setBusy('Choose where to keep it…'))
+      setSaved(filename)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not merge these files.')
     } finally {
@@ -251,6 +255,12 @@ export function MergePdfs() {
       busy={busy}
     >
       {error && <WorkspaceError>{error}</WorkspaceError>}
+      {saved && (
+        <WorkspaceNote onDismiss={() => setSaved(null)}>
+          <span className="font-medium">{saved}</span> is on its way. Nothing here has changed,
+          so you can save it again if you need to.
+        </WorkspaceNote>
+      )}
 
       <div className="panel mb-5 flex flex-wrap items-center gap-4 p-4">
         <p className="text-[14px] text-ink-2">

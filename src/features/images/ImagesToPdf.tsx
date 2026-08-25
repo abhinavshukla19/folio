@@ -17,7 +17,7 @@ import { Download, RotateCw, Trash2 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Dropzone } from '../../components/Dropzone'
 import { Intake } from '../../components/Intake'
-import { Workspace, WorkspaceError } from '../Workspace'
+import { Workspace, WorkspaceError, WorkspaceNote } from '../Workspace'
 import {
   downloadBlob,
   imagesToPdf,
@@ -85,6 +85,7 @@ export function ImagesToPdf() {
   })
   const [busy, setBusy] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [saved, setSaved] = useState<string | null>(null)
   // The image shown large in the focus panel — whichever you touched last.
   const [focusId, setFocusId] = useState<string | null>(null)
   const [outName, setOutName] = useState('images')
@@ -145,6 +146,7 @@ export function ImagesToPdf() {
   const save = useCallback(async () => {
     if (!items.length) return
     setError(null)
+    setSaved(null)
     setBusy('Building PDF…')
     try {
       const blob = await imagesToPdf(
@@ -152,7 +154,9 @@ export function ImagesToPdf() {
         options,
         (done, total) => setBusy(`Adding image ${done} of ${total}…`),
       )
-      await downloadBlob(blob, `${cleanFileName(outName)}.pdf`)
+      const filename = `${cleanFileName(outName)}.pdf`
+      await downloadBlob(blob, filename, () => setBusy('Choose where to keep it…'))
+      setSaved(filename)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not build the PDF.')
     } finally {
@@ -205,6 +209,12 @@ export function ImagesToPdf() {
       busy={busy}
     >
       {error && <WorkspaceError>{error}</WorkspaceError>}
+      {saved && (
+        <WorkspaceNote onDismiss={() => setSaved(null)}>
+          <span className="font-medium">{saved}</span> is on its way. Nothing here has changed,
+          so you can save it again if you need to.
+        </WorkspaceNote>
+      )}
 
       <div className="panel mb-5 flex flex-wrap items-end gap-x-8 gap-y-5 p-5">
         <Segmented

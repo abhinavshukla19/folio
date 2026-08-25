@@ -4,7 +4,7 @@ import { Dropzone } from '../../components/Dropzone'
 import { Intake } from '../../components/Intake'
 import { FileNameField, cleanFileName } from '../../components/FileNameField'
 import { Residency, formatBytes as residencyBytes } from '../../components/Residency'
-import { Workspace, WorkspaceError, WorkspaceButton } from '../Workspace'
+import { Workspace, WorkspaceError, WorkspaceButton, WorkspaceNote } from '../Workspace'
 import { downloadBlob } from '../../lib/pdf/export'
 import {
   EXTENSION,
@@ -171,6 +171,7 @@ export function EditPhoto() {
   const [outName, setOutName] = useState('photo')
   const [busy, setBusy] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [saved, setSaved] = useState<string | null>(null)
   const [estimate, setEstimate] = useState<{ bytes: number; w: number; h: number; met: boolean } | null>(null)
   const [measuring, setMeasuring] = useState(false)
 
@@ -328,7 +329,9 @@ export function EditPhoto() {
         outH,
         targetKb === '' ? undefined : Number(targetKb) * 1024,
       )
-      await downloadBlob(r.blob, `${cleanFileName(outName)}.${EXTENSION[format]}`)
+      const filename = `${cleanFileName(outName)}.${EXTENSION[format]}`
+      await downloadBlob(r.blob, filename, () => setBusy('Choose where to keep it…'))
+      setSaved(filename)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'The image could not be saved.')
     } finally {
@@ -381,6 +384,12 @@ export function EditPhoto() {
       busy={busy}
     >
       {error && <WorkspaceError>{error}</WorkspaceError>}
+      {saved && (
+        <WorkspaceNote onDismiss={() => setSaved(null)}>
+          <span className="font-medium">{saved}</span> is on its way. Nothing here has changed,
+          so you can save it again if you need to.
+        </WorkspaceNote>
+      )}
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         {/* the picture */}

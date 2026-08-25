@@ -27,7 +27,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Dropzone } from '../../components/Dropzone'
 import { Intake } from '../../components/Intake'
-import { Workspace, WorkspaceButton, WorkspaceError } from '../Workspace'
+import { Workspace, WorkspaceButton, WorkspaceError, WorkspaceNote } from '../Workspace'
 import { buildPdf, downloadBlob } from '../../lib/pdf/export'
 import {
   EncryptedPdfError,
@@ -85,6 +85,7 @@ export function OrganizePdf() {
   const [outName, setOutName] = useState('document')
   const [status, setStatus] = useState<'empty' | 'loading' | 'ready'>('empty')
   const [error, setError] = useState<string | null>(null)
+  const [saved, setSaved] = useState<string | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
 
   const anchor = useRef<string | null>(null)
@@ -307,10 +308,13 @@ export function OrganizePdf() {
           setBusy(`Flattening page ${i + 1} of ${toFlatten.length}…`)
           rasters[toFlatten[i].id] = await renderPageBytes(doc.doc, toFlatten[i].source + 1)
         }
+        setSaved(null)
         setBusy(onlySelected ? 'Building selection…' : 'Building PDF…')
         const blob = await buildPdf(doc.bytes, chosen, annotations, rasters)
         const base = cleanFileName(outName)
-        await downloadBlob(blob, onlySelected ? `${base}-selected.pdf` : `${base}.pdf`)
+        const filename = onlySelected ? `${base}-selected.pdf` : `${base}.pdf`
+        await downloadBlob(blob, filename, () => setBusy('Choose where to keep it…'))
+        setSaved(filename)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Export failed.')
       } finally {
@@ -439,6 +443,12 @@ export function OrganizePdf() {
       busy={busy}
     >
       {error && <WorkspaceError>{error}</WorkspaceError>}
+      {saved && (
+        <WorkspaceNote onDismiss={() => setSaved(null)}>
+          <span className="font-medium">{saved}</span> is on its way. Nothing here has changed,
+          so you can save it again if you need to.
+        </WorkspaceNote>
+      )}
 
       <div className="sticky top-2 z-30 mb-5 flex flex-wrap items-center gap-1 rounded-[6px] bg-table p-1.5 shadow-[var(--lift-2),var(--rim)]">
         <WorkspaceButton
